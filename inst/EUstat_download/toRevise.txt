@@ -1,0 +1,787 @@
+  
+------------------
+Summary for variable:  lfsa_argaed
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ isced11 :
+   ED0-2; ED3_4; ED5-8; NRP; TOTAL 
+
+ 
+------------------
+Summary for variable:  lfsa_ergaed
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ isced11 :
+   ED0-2; ED3_4; ED5-8; NRP; TOTAL 
+
+ 
+------------------
+Summary for variable:  lfsa_ergacob
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ c_birth :
+   EU15_FOR; EU28_FOR; FOR; NAT; NEU15_FOR; NEU28_FOR; NRP; TOTAL 
+
+ 
+------------------
+Summary for variable:  lfsa_urgan
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ citizen :
+   EU15_FOR; EU28_FOR; FOR; NAT; NEU15_FOR; NEU28_FOR; NRP; TOTAL 
+
+ 
+------------------
+Summary for variable:  une_educ_a
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ isced11 :
+   ED0-2; ED3_4; ED5-8 
+
+ 
+ unit :
+   PC_ACT; PC_UNE; THS_PER 
+
+ 
+------------------
+Summary for variable:  lfsa_upgan
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ citizen :
+   EU15_FOR; EU28_FOR; FOR; NAT; NEU15_FOR; NEU28_FOR; NRP; TOTAL 
+
+ 
+------------------
+Summary for variable:  edat_lfse_20
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ typtrai :
+   NO_FED_NFE 
+
+ 
+ wstatus :
+   INAC; NEMP; NWANT; UNE; WANT 
+
+ 
+ unit :
+   PC 
+
+ 
+------------------
+Summary for variable:  une_rt_a
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC_ACT; PC_POP; THS_PER 
+
+ 
+------------------
+Summary for variable:  ilc_lvhl36
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+------------------
+Summary for variable:  ilc_lvhl30
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ trans1y :
+   TO_EMP; TO_FT; TO_INAC; TO_PT; TO_UNE 
+
+ 
+ wstatus :
+   EMP; EMP_FT; EMP_PT; INAC; UNE 
+
+ 
+------------------
+Summary for variable:  lfsa_egad
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ duration :
+   M0-11; M12-23; M24-59; M_GE60; NRP; TOTAL 
+
+ 
+ unit :
+   PC; THS 
+
+ 
+------------------
+Summary for variable:  lfsa_eppgai
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+------------------
+Summary for variable:  lfsi_emp_a
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC_POP; THS_PER 
+
+ 
+ indic_em :
+   ACT; EMP_LFS 
+
+ 
+------------------
+Summary for variable:  lfsi_pt_a
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ worktime :
+   PT; TEMP 
+
+ 
+ unit :
+   PC_EMP; THS_PER; PC_SAL 
+
+ 
+------------------
+Summary for variable:  lfsa_egised
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   THS 
+
+ 
+ isced11 :
+   ED0-2; ED3_4; ED5-8; NRP; TOTAL 
+
+ 
+ isco08 :
+   NRP; OC0; OC1; OC2; OC3; OC4; OC5; OC6; OC7; OC8; OC9; TOTAL 
+
+ 
+------------------
+Summary for variable:  earn_gr_gpgr2
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ nace_r2 :
+   B; B-N; B-S; B-S_X_O; C; D; E; F; G; H; I; J; K; L; M; N; O; P; Q; R; S 
+
+ 
+------------------
+Summary for variable:  selfemp_p
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   THS 
+
+ 
+ wstatus :
+   SELF; SELF_NS; SELF_S 
+
+ 
+ citizen :
+   EU15_FOR; EU28_FOR; FOR; NAT; NEU15_FOR; NEU28_FOR; NRP; TOTAL 
+
+ 
+------------------
+Summary for variable:  selfempwe_p
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   THS 
+
+ 
+ wstatus :
+   SELF; SELF_NS; SELF_S 
+
+ 
+ citizen :
+   EU15_FOR; EU28_FOR; FOR; NAT; NEU15_FOR; NEU28_FOR; NRP; TOTAL 
+
+ 
+------------------
+Summary for variable:  lfsa_etgar
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC_SAL; PC_SAL_TEMP 
+
+ 
+ reason :
+   INEDUC; INVTMP; NRP; STAGE; TOTAL; WANTTMP 
+
+ 
+------------------
+Summary for variable:  prc_ppp_ind
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ na_item :
+   EXP_EUR; EXP_EUR_HAB; EXP_NAC; EXP_NAC_PC_GDP; EXP_PPS_EU15; EXP_PPS_EU15_HAB; EXP_PPS_EU27; EXP_PPS_EU27_2019; EXP_PPS_EU27_2019_HAB; EXP_PPS_EU27_HAB; EXP_PPS_EU28; EXP_PPS_EU28_HAB; PLI_EU15; PLI_EU27; PLI_EU27_2019; PLI_EU28; PPP_EU15; PPP_EU27; PPP_EU27_2019; PPP_EU28; VI_PPS_EU15_HAB; VI_PPS_EU27_2019_HAB; VI_PPS_EU27_HAB; VI_PPS_EU28_HAB 
+
+ 
+ aggreg :
+   00; A01; A0101; A010101; A01010101; A01010102; A01010103; A01010104; A01010105; A01010106; A01010199; A010102; A0102; A010201; A010202; A0103; A0104; A0105; A0106; A0107; A010701; A0108; A0109; A0110; A0111; A0112; A04; A05; A0501; A0502; E01; E011; E012; E0121; E0122; P01; P0101; P010101; P010102; P010103; P0102; P02; P0201; P0202; P020201; P020202; A010301; A010302; A010405; A010501; A010503; A010603; A010703; A010901; A050101; A050102; A050103; A050201; A050202; A050203; A0503 
+
+ 
+------------------
+Summary for variable:  gov_10dd_edpt1
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   MIO_EUR; MIO_NAC; PC_GDP 
+
+ 
+ sector :
+   S1; S13; S1311; S1312; S1313; S1314 
+
+ 
+ na_item :
+   B1GQ; B5GQ; AF_81L; B9; D41PAY; GD; GD_F2; GD_F3; GD_F31; GD_F32; GD_F4; GD_F41; GD_F42; IGL_F4_EA17; IGL_F4_EA18; IGL_F4_EA19; IGL_F4_EU25; IGL_F4_EU27; IGL_F4_EU28; P51G 
+
+ 
+------------------
+Summary for variable:  nasa_10_ki
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ na_item :
+   B2G_B3G_RAT_S11; B7G_N_HAB_GR; B7G_R_HAB_GR; DIR_S11; DIR_S14; DIR_S14_S15; IRG_S11; IRG_S14; IRG_S14_S15; NFW_S14; NFW_S14_S15; P4_R_HAB_GR; P51G_RAT_GDP_BUS; P51G_RAT_GDP_S1; P51G_RAT_GDP_S13; P51G_RAT_GDP_S14; P51G_RAT_GDP_S1M; ROCE_S11; ROE_S11; SRG_S14; SRG_S14_S15 
+
+ 
+ sector :
+   S11; S14_S15; S14; S11_S12; S1; S13 
+
+ 
+------------------
+Summary for variable:  gov_10a_main
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   MIO_NAC; PC_GDP; MIO_EUR 
+
+ 
+ sector :
+   S13; S1311; S1312; S1313; S1314; S212; S1 
+
+ 
+ na_item :
+   B1G; B1N; B2N; B5N; B6N; B8G; B8N; B9; D11PAY; D12PAY; D1PAY; D211REC; D21REC; D29PAY; D29REC; D2REC; D31PAY; D39PAY; D39REC; D3PAY; D41GPAY; D41GREC; D41PAY; D41REC; D42PAY; D42REC; D42_TO_D45PAY; D42_TO_D45REC; D43PAY; D43REC; D44PAY; D44REC; D45PAY; D45REC; D4PAY; D4PAY_S1311; D4PAY_S1312; D4PAY_S1313; D4PAY_S1314; D4REC; D51A_C1REC; D51B_C2REC; D5PAY; D5REC; D611REC; D613REC; D61REC; D62PAY; D62PAY_GF1002; D62PAY_GF1003; D62PAY_GF1005; D62_D632PAY; D632PAY; D71PAY; D71REC; D72PAY; D72REC; D73PAY; D73REC; D74PAY; D74PAY_S212; D74REC; D74REC_S212; D75PAY; D75REC; D76PAY; D76REC; D7PAY; D7PAY_S1311; D7PAY_S1312; D7PAY_S1313; D7PAY_S1314; D7REC; D7REC_S212; D8; D91REC; D92PAY; D92REC; D92_D99REC; D995REC; D99PAY; D99REC; D9PAY; D9PAY_S1311; D9PAY_S1312; D9PAY_S1313; D9PAY_S1314; D9PAY_S2; D9PAY_S212; D9REC; D9REC_S2; D9REC_S212; NP; OP5ANP; P1; P11; P11_P12; P11_P12_P131; P12; P13; P131; P132; P2; P3; P31; P32; P5; P51C; P51G; P52_P53; PTC; TC; TE; TR; D3REC_S212 
+
+ 
+------------------
+Summary for variable:  labourcost_i
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   EUR; I10; NAC; PCH_10Y; PCH_3Y; PCH_5Y; PCH_PRE; PC_EU27_2019_MPPS_CP; PC_EU28_MPPS_CP; PPS; PPS_EU27_2019 
+
+ 
+ na_item :
+   D1_SAL_HW; D1_SAL_PER; NULC_HW; NULC_PER; RLPR_HW; RLPR_PER; NLPR_HW; NLPR_PER 
+
+ 
+------------------
+Summary for variable:  labourprod_i
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   EUR; I10; NAC; PCH_10Y; PCH_3Y; PCH_5Y; PCH_PRE; PC_EU27_2019_MPPS_CP; PC_EU28_MPPS_CP; PPS; PPS_EU27_2019 
+
+ 
+ na_item :
+   D1_SAL_HW; D1_SAL_PER; NULC_HW; NULC_PER; RLPR_HW; RLPR_PER; NLPR_HW; NLPR_PER 
+
+ 
+------------------
+Summary for variable:  compemp_pps
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   EUR; I10; NAC; PCH_10Y; PCH_3Y; PCH_5Y; PCH_PRE; PC_EU27_2019_MPPS_CP; PC_EU28_MPPS_CP; PPS; PPS_EU27_2019 
+
+ 
+ na_item :
+   D1_SAL_HW; D1_SAL_PER; NULC_HW; NULC_PER; RLPR_HW; RLPR_PER; NLPR_HW; NLPR_PER 
+
+ 
+------------------
+Summary for variable:  earn_nt_net
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ currency :
+   EUR; NAC; PPS 
+
+ 
+ estruct :
+   FAM; GRS; NET; SOC; TAX; TOTAL 
+
+ 
+ ecase :
+   A1_100; A1_125; A1_167; A1_2CH_67; A1_50; A1_67; A1_80; CPL_100_100; CPL_100_33; CPL_2CH_100_0; CPL_2CH_100_100; CPL_2CH_100_33; CPL_2CH_100_67; TOTAL 
+
+ 
+------------------
+Summary for variable:  spr_exp_sum
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ spdeps :
+   ADMIN; DISA; EXCLU; FAM; HOUSE; HOUSEEXCLU; OLD; OLDSURVIV; OTHER; SICK; SICKDISA; SPBENEFNOREROUTE; SURVIV; TOTALNOREROUTE; UNEMPLOY 
+
+ 
+ unit :
+   EUR_HAB; EUR_HAB_KP10; MEUR_KP10; MIO_EUR; MIO_NAC; MIO_PPS; MNAC_KP10; PC_BEN; PC_EXP; PC_GDP; PPS_HAB 
+
+ 
+------------------
+Summary for variable:  expspr_p
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   MIO_EUR; MIO_NAC; PC_GDP; PC_TOT 
+
+ 
+ sector :
+   S13; S1311; S1312; S1313; S1314 
+
+ 
+ cofog99 :
+   GF01; GF0101; GF0102; GF0103; GF0104; GF0105; GF0106; GF0107; GF0108; GF02; GF0201; GF0202; GF0203; GF0204; GF0205; GF03; GF0301; GF0302; GF0303; GF0304; GF0305; GF0306; GF04; GF0401; GF0402; GF0403; GF0404; GF0405; GF0406; GF0407; GF0408; GF0409; GF05; GF0501; GF0502; GF0503; GF0504; GF0505; GF0506; GF06; GF0601; GF0602; GF0603; GF0604; GF0605; GF0606; GF07; GF0701; GF0702; GF0703; GF0704; GF0705; GF0706; GF08; GF0801; GF0802; GF0803; GF0804; GF0805; GF0806; GF09; GF0901; GF0902; GF0903; GF0904; GF0905; GF0906; GF0907; GF0908; GF10; GF1001; GF1002; GF1003; GF1004; GF1005; GF1006; GF1007; GF1008; GF1009; TOTAL 
+
+ 
+ na_item :
+   D1; D29_D5_D8; D3; D4; D4_S1311; D4_S1312; D4_S1313; D4_S1314; D62; D62_D632; D632; D7; D7_S1311; D7_S1312; D7_S1313; D7_S1314; D9; D92; D9_S1311; D9_S1312; D9_S1313; D9_S1314; NP; OP5ANP; P2; P2_D29_D5_D8; P3; P31; P32; P5; P51G; TE 
+
+ 
+------------------
+Summary for variable:  ilc_pnp3
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_il :
+   R_PN_WK 
+
+ 
+------------------
+Summary for variable:  spr_exp_pens
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ spdepb :
+   SCPANTPEN; SCPDISPEN; SCPEARLYMARK; SCPEARLYRED; SCPOLDPEN; SCPPARPEN; SCPSURVPEN; TOTAL 
+
+ 
+ spdepm :
+   MEANS; NON_MEANS; TOTAL 
+
+ 
+ unit :
+   EUR_HAB_KP10; MIO_EUR; MIO_NAC; MIO_PPS; PC_GDP; PPS_HAB 
+
+ 
+------------------
+Summary for variable:  spr_pns_ben
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PERS 
+
+ 
+ spdepm :
+   MEANS; NON_MEANS; TOTAL 
+
+ 
+ spdepb :
+   SCPANTPEN; SCPDISPEN; SCPEARLYMARK; SCPEARLYRED; SCPOLDPEN; SCPPARPEN; SCPSURVPEN; SCPOLDSURV; SCPTOTDISAB; SCPTOTOLDAGE; TOTAL 
+
+ 
+------------------
+Summary for variable:  edat_lfse_14
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ wstatus :
+   EMP; NEMP; NWANT; POP; WANT 
+
+ 
+ unit :
+   PC 
+
+ 
+------------------
+Summary for variable:  trng_lfse_01
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+------------------
+Summary for variable:  edat_lfse_03
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ isced11 :
+   ED0-2; ED3-8; ED3_4; ED5-8 
+
+ 
+------------------
+Summary for variable:  expedu_p
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   MIO_EUR; MIO_NAC; PC_GDP; PC_TOT 
+
+ 
+ sector :
+   S13; S1311; S1312; S1313; S1314 
+
+ 
+ cofog99 :
+   GF01; GF0101; GF0102; GF0103; GF0104; GF0105; GF0106; GF0107; GF0108; GF02; GF0201; GF0202; GF0203; GF0204; GF0205; GF03; GF0301; GF0302; GF0303; GF0304; GF0305; GF0306; GF04; GF0401; GF0402; GF0403; GF0404; GF0405; GF0406; GF0407; GF0408; GF0409; GF05; GF0501; GF0502; GF0503; GF0504; GF0505; GF0506; GF06; GF0601; GF0602; GF0603; GF0604; GF0605; GF0606; GF07; GF0701; GF0702; GF0703; GF0704; GF0705; GF0706; GF08; GF0801; GF0802; GF0803; GF0804; GF0805; GF0806; GF09; GF0901; GF0902; GF0903; GF0904; GF0905; GF0906; GF0907; GF0908; GF10; GF1001; GF1002; GF1003; GF1004; GF1005; GF1006; GF1007; GF1008; GF1009; TOTAL 
+
+ 
+ na_item :
+   D1; D29_D5_D8; D3; D4; D4_S1311; D4_S1312; D4_S1313; D4_S1314; D62; D62_D632; D632; D7; D7_S1311; D7_S1312; D7_S1313; D7_S1314; D9; D92; D9_S1311; D9_S1312; D9_S1313; D9_S1314; NP; OP5ANP; P2; P2_D29_D5_D8; P3; P31; P32; P5; P51G; TE 
+
+ 
+------------------
+Summary for variable:  hlth_silc_08
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC; PC_POP 
+
+ 
+ quantile :
+   QU1; QU2; QU3; QU4; QU5; TOTAL 
+
+ 
+ reason :
+   FEAR; HOPING; NOKNOW; NOTIME; NO_UNMET; OTH; TOOEFW; TOOEXP; TOOFAR; WAITING 
+
+ 
+------------------
+Summary for variable:  exphlth_p
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   MIO_EUR; MIO_NAC; PC_GDP; PC_TOT 
+
+ 
+ sector :
+   S13; S1311; S1312; S1313; S1314 
+
+ 
+ cofog99 :
+   GF01; GF0101; GF0102; GF0103; GF0104; GF0105; GF0106; GF0107; GF0108; GF02; GF0201; GF0202; GF0203; GF0204; GF0205; GF03; GF0301; GF0302; GF0303; GF0304; GF0305; GF0306; GF04; GF0401; GF0402; GF0403; GF0404; GF0405; GF0406; GF0407; GF0408; GF0409; GF05; GF0501; GF0502; GF0503; GF0504; GF0505; GF0506; GF06; GF0601; GF0602; GF0603; GF0604; GF0605; GF0606; GF07; GF0701; GF0702; GF0703; GF0704; GF0705; GF0706; GF08; GF0801; GF0802; GF0803; GF0804; GF0805; GF0806; GF09; GF0901; GF0902; GF0903; GF0904; GF0905; GF0906; GF0907; GF0908; GF10; GF1001; GF1002; GF1003; GF1004; GF1005; GF1006; GF1007; GF1008; GF1009; TOTAL 
+
+ 
+ na_item :
+   D1; D29_D5_D8; D3; D4; D4_S1311; D4_S1312; D4_S1313; D4_S1314; D62; D62_D632; D632; D7; D7_S1311; D7_S1312; D7_S1313; D7_S1314; D9; D92; D9_S1311; D9_S1312; D9_S1313; D9_S1314; NP; OP5ANP; P2; P2_D29_D5_D8; P3; P31; P32; P5; P51G; TE 
+
+ 
+------------------
+Summary for variable:  isoc_sk_dskl_i
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_is :
+   I_DSK_AB; I_DSK_B; I_DSK_BAB; I_DSK_C_AB; I_DSK_C_B; I_DSK_I_AB; I_DSK_I_B; I_DSK_L; I_DSK_NA; I_DSK_PS_AB; I_DSK_PS_B; I_DSK_S_AB; I_DSK_S_B; I_DSK_X 
+
+ 
+ ind_type :
+   CB_EU_FOR; CB_EXT_EU; CB_FOR; CB_NAT; CC_EU_FOR; CC_EXT_EU; CC_FOR; CC_NAT; EMPL_UNE; F_I0_2; F_I3_4; F_I5_8; F_Y16_19; F_Y16_24; F_Y16_29; F_Y16_74; F_Y20_24; F_Y25_29; F_Y25_54; F_Y25_64; F_Y55_74; HHI_Q1; HHI_Q2; HHI_Q3; HHI_Q4; I0_2; I3_4; I5_8; IND_BROAD; IND_BROADX; IND_DEG1; IND_DEG2; IND_DEG3; IND_TOTAL; ISCO0_5; ISCO6_9; ISCO_ICT; ISCO_ICTX; M_I0_2; M_I3_4; M_I5_8; M_Y16_19; M_Y16_24; M_Y16_29; M_Y16_74; M_Y20_24; M_Y25_29; M_Y25_54; M_Y25_64; M_Y55_74; RETIR_OTHER; RF_GE1; RF_GE2; SAL_SELF_FAM; STUD; UNE; Y0_15; Y16_19; Y16_24; Y16_24HI; Y16_24LO; Y16_24ME; Y16_29; Y16_29HI; Y16_29LO; Y16_29ME; Y20_24; Y25_29; Y25_34; Y25_54; Y25_54HI; Y25_54LO; Y25_54ME; Y25_64; Y25_64HI; Y25_64LO; Y25_64ME; Y25_64_RETIROTH; Y25_64_SALSELFFAM; Y25_64_UNE; Y35_44; Y45_54; Y55_64; Y55_74; Y55_74HI; Y55_74LO; Y55_74ME; Y65_74; Y75_MAX 
+
+ 
+ unit :
+   PC_IND; PC_IND_IU3; PC_IND_ILT12 
+
+ 
+------------------
+Summary for variable:  isoc_bde15b_h
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_is :
+   H_BBFIX; H_BBMOB; H_BROAD; H_IACC; H_XACC; H_XCOST; H_XELSE; H_XEQU; H_XNEED; H_XOTH; H_XSEC; H_XSKL; H_XDIS; H_XWANT 
+
+ 
+ unit :
+   PC_HH; PC_HH_IACC; PC_HH_IACCX 
+
+ 
+ hhtyp :
+   A1; A1_DCH; A2; A2_DCH; ALL_DCH; ALL_NDCH; A_GE3; A_GE3_DCH; HHI_Q1; HHI_Q2; HHI_Q3; HHI_Q4; HH_DEG1; HH_DEG2; HH_DEG3; TOTAL; HH_NO1; HH_O1 
+
+ 
+------------------
+Summary for variable:  isoc_ci_im_i
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_is :
+   I_IUMC; I_IUMD; I_IUMD_OTH; I_IUMP; I_IUMC_MPH; I_IUMC_WL; I_IUHD; I_IUHD_MPH 
+
+ 
+ unit :
+   PC_IND; PC_IND_IU3; PC_IND_IUMC; PC_IND_IUHD 
+
+ 
+ ind_type :
+   CB_EU_FOR; CB_EXT_EU; CB_FOR; CB_NAT; CC_EU_FOR; CC_EXT_EU; CC_FOR; CC_NAT; EMPL_UNE; F_I0_2; F_I3_4; F_I5_8; F_Y16_19; F_Y16_24; F_Y16_29; F_Y16_74; F_Y20_24; F_Y25_29; F_Y25_54; F_Y25_64; F_Y55_74; HHI_Q1; HHI_Q2; HHI_Q3; HHI_Q4; I0_2; I3_4; I5_8; IND_BROAD; IND_BROADX; IND_DEG1; IND_DEG2; IND_DEG3; IND_TOTAL; ISCO0_5; ISCO6_9; ISCO_ICT; ISCO_ICTX; M_I0_2; M_I3_4; M_I5_8; M_Y16_19; M_Y16_24; M_Y16_29; M_Y16_74; M_Y20_24; M_Y25_29; M_Y25_54; M_Y25_64; M_Y55_74; RETIR_OTHER; SAL_SELF_FAM; STUD; UNE; Y0_15; Y16_19; Y16_24; Y16_24HI; Y16_24LO; Y16_24ME; Y16_29; Y16_29HI; Y16_29LO; Y16_29ME; Y20_24; Y25_29; Y25_34; Y25_54; Y25_54HI; Y25_54LO; Y25_54ME; Y25_64; Y25_64HI; Y25_64LO; Y25_64ME; Y25_64_RETIROTH; Y25_64_SALSELFFAM; Y25_64_UNE; Y35_44; Y45_54; Y55_64; Y55_74; Y55_74HI; Y55_74LO; Y55_74ME; Y65_74; Y75_MAX; IND_NO1; IND_O1 
+
+ 
+------------------
+Summary for variable:  isoc_ec_ibuy
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_is :
+   I_B3_12; I_BBOOK; I_BBOOKNL; I_BCLOT; I_BEEQU; I_BELRN; I_BFDOM; I_BFEU; I_BFFOR; I_BFILM; I_BFOOD; I_BFUNK; I_BFURN; I_BFWRLD; I_BF_1_2; I_BF_3-5; I_BF_6-10; I_BF_GT10; I_BF_HI; I_BGOOD; I_BHARD; I_BHOLAC; I_BHOLS; I_BLT12; I_BMED; I_BOTA; I_BOTHTH; I_BSOFT; I_BTICK; I_BTS; I_BUMT12; I_BUMT12X; I_BUX; I_BUY3; I_IBV_100-499; I_IBV_50-99; I_IBV_500-999; I_IBV_GE1000; I_IBV_HI; I_IBV_LT50; I_BBOOK1O; I_BEBOOKO; I_BFFOR_DWL; I_BFFOR_OSV; I_BFFOR_PGD; I_BFFOR_TRH; I_BFFOR_TRHOSV; I_BFILMO; I_BGOOD1O; I_BGOOD3O; I_BMGNWO; I_BSOFTO; I_BFIN; I_BBOOKO; I_BGOODO; I_BGSOFT; I_BOSOFT 
+
+ 
+ ind_type :
+   CB_EU_FOR; CB_EXT_EU; CB_FOR; CB_NAT; CC_EU_FOR; CC_EXT_EU; CC_FOR; CC_NAT; EMPL_UNE; F_I0_2; F_I3_4; F_I5_8; F_Y16_19; F_Y16_24; F_Y16_29; F_Y16_74; F_Y20_24; F_Y25_29; F_Y25_54; F_Y25_64; F_Y55_74; HHI_Q1; HHI_Q2; HHI_Q3; HHI_Q4; I0_2; I3_4; I5_8; IND_BROAD; IND_BROADX; IND_DEG1; IND_DEG2; IND_DEG3; IND_TOTAL; ISCO0_5; ISCO6_9; ISCO_ICT; ISCO_ICTX; MD; MDX; M_I0_2; M_I3_4; M_I5_8; M_Y16_19; M_Y16_24; M_Y16_29; M_Y16_74; M_Y20_24; M_Y25_29; M_Y25_54; M_Y25_64; M_Y55_74; RETIR_OTHER; SAL_SELF_FAM; STUD; UNE; Y0_15; Y16_19; Y16_24; Y16_24HI; Y16_24LO; Y16_24ME; Y16_29; Y16_29HI; Y16_29LO; Y16_29ME; Y20_24; Y25_29; Y25_34; Y25_54; Y25_54HI; Y25_54LO; Y25_54ME; Y25_64; Y25_64HI; Y25_64LO; Y25_64ME; Y25_64_RETIROTH; Y25_64_SALSELFFAM; Y25_64_UNE; Y35_44; Y45_54; Y55_64; Y55_74; Y55_74HI; Y55_74LO; Y55_74ME; Y65_74; Y75_MAX; IND_NO1; IND_O1; RF_GE1; RF_GE2; SAL; SELF_FAM; RETIR 
+
+ 
+ unit :
+   PC_IND; PC_IND_ILT12; PC_IND_BLT12; PC_IND_BUY3; PC_IND_IU3; PC_IND_BFFOR 
+
+ 
+------------------
+Summary for variable:  isoc_ci_it_en2
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_is :
+   E_FIXBB; E_ISPDF_10_30; E_ISPDF_2_10; E_ISPDF_30_100; E_ISPDF_GE100; E_ISPDF_LT2; E_BROAD2; E_ISPDFOK; E_ISPDFOKX_10_30; E_ISPDFOKX_2_10; E_ISPDFOKX_GE30; E_ISPDFOK_GE30; E_MOBBB; E_MOB2; E_BBOTH; E_BROAD; E_DSL; E_ISPD_10_30; E_ISPD_2_10; E_ISPD_30_100; E_ISPD_GE100; E_ISPD_LT2; E_MOB 
+
+ 
+ unit :
+   PC_ENT; PC_ENT_CUSE; PC_ENT_IACC; PC_ENT_FIXBB 
+
+ 
+ sizen_r2 :
+   10_C10_18; 10_C10_33; 10_C10_S951_XK; 10_C19_23; 10_C24_25; 10_C26_33; 10_D35_E39; 10_F41_43; 10_G45_47; 10_G47; 10_H49_53; 10_I55; 10_ICT_T; 10_J58_63; 10_L68; 10_M69_74; 10_N77_82; L_C10_S951_XK; M01_C10_S951_XK; M09_C10_S951_XK; M29_C10_S951_XK; M_C10_S951_XK; SM_C10_S951_XK; S_C10_S951_XK; MC_C10_S951_XK; MI_C10_S951_XK; VS_C10_S951_XK; 10_K6FINS; 10_C10_N82_XK; 10_C19_22; 10_C23_25; 10_I56; L_C10_N82_XK; MC_C10_N82_XK; MI_C10_N82_XK; M_C10_N82_XK; SM_C10_N82_XK; S_C10_N82_XK; VS_C10_N82_XK 
+
+ 
+------------------
+Summary for variable:  rd_p_perslf
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ prof_pos :
+   RSE; TOTAL 
+
+ 
+ sectperf :
+   BES; GOV; HES; PNP; TOTAL 
+
+ 
+ unit :
+   PC_ACT_FTE; PC_ACT_HC; PC_EMP_FTE; PC_EMP_HC 
+
+ 
+------------------
+Summary for variable:  rd_e_gerdtot
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ sectperf :
+   BES; GOV; HES; PNP; TOTAL 
+
+ 
+ unit :
+   EUR_HAB; MIO_EUR; MIO_NAC; MIO_PPS; MIO_PPS_KP05; PC_GDP; PPS_HAB_KP05 
+
+ 
+------------------
+Summary for variable:  isoc_ciegi_ac
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_is :
+   I_IGOV12FM; I_IGOV12IF; I_IGOV12RT; I_IUGOV12; I_IGOVDOC; I_IGOVED; I_IGOVLIB; I_IGOVMV; I_IGOVSS; I_IGOVTAX; I_IGOV_ANY 
+
+ 
+ unit :
+   PC_IND; PC_IND_ILT12; PC_IND_IUGOV12 
+
+ 
+ ind_type :
+   CB_EU_FOR; CB_EXT_EU; CB_FOR; CB_NAT; CC_EU_FOR; CC_EXT_EU; CC_FOR; CC_NAT; EMPL_UNE; F_I0_2; F_I3_4; F_I5_8; F_Y16_19; F_Y16_24; F_Y16_29; F_Y16_74; F_Y20_24; F_Y25_29; F_Y25_54; F_Y25_64; F_Y55_74; HHI_Q1; HHI_Q2; HHI_Q3; HHI_Q4; I0_2; I3_4; I5_8; IND_BROAD; IND_BROADX; IND_DEG1; IND_DEG2; IND_DEG3; IND_TOTAL; ISCO0_5; ISCO6_9; ISCO_ICT; ISCO_ICTX; MD; MDX; M_I0_2; M_I3_4; M_I5_8; M_Y16_19; M_Y16_24; M_Y16_29; M_Y16_74; M_Y20_24; M_Y25_29; M_Y25_54; M_Y25_64; M_Y55_74; RETIR_OTHER; RF_GE1; RF_GE2; SAL_SELF_FAM; STUD; UNE; Y0_15; Y16_19; Y16_24; Y16_24HI; Y16_24LO; Y16_24ME; Y16_29; Y16_29HI; Y16_29LO; Y16_29ME; Y20_24; Y25_29; Y25_34; Y25_54; Y25_54HI; Y25_54LO; Y25_54ME; Y25_64; Y25_64HI; Y25_64LO; Y25_64ME; Y25_64_RETIROTH; Y25_64_SALSELFFAM; Y25_64_UNE; Y35_44; Y45_54; Y55_64; Y55_74; Y55_74HI; Y55_74LO; Y55_74ME; Y65_74; Y75_MAX; IND_NO1; IND_O1 
+
+ 
+------------------
+Summary for variable:  exppubserv_p
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   MIO_EUR; MIO_NAC; PC_GDP; PC_TOT 
+
+ 
+ sector :
+   S13; S1311; S1312; S1313; S1314 
+
+ 
+ cofog99 :
+   GF01; GF0101; GF0102; GF0103; GF0104; GF0105; GF0106; GF0107; GF0108; GF02; GF0201; GF0202; GF0203; GF0204; GF0205; GF03; GF0301; GF0302; GF0303; GF0304; GF0305; GF0306; GF04; GF0401; GF0402; GF0403; GF0404; GF0405; GF0406; GF0407; GF0408; GF0409; GF05; GF0501; GF0502; GF0503; GF0504; GF0505; GF0506; GF06; GF0601; GF0602; GF0603; GF0604; GF0605; GF0606; GF07; GF0701; GF0702; GF0703; GF0704; GF0705; GF0706; GF08; GF0801; GF0802; GF0803; GF0804; GF0805; GF0806; GF09; GF0901; GF0902; GF0903; GF0904; GF0905; GF0906; GF0907; GF0908; GF10; GF1001; GF1002; GF1003; GF1004; GF1005; GF1006; GF1007; GF1008; GF1009; TOTAL 
+
+ 
+ na_item :
+   D1; D29_D5_D8; D3; D4; D4_S1311; D4_S1312; D4_S1313; D4_S1314; D62; D62_D632; D632; D7; D7_S1311; D7_S1312; D7_S1313; D7_S1314; D9; D92; D9_S1311; D9_S1312; D9_S1313; D9_S1314; NP; OP5ANP; P2; P2_D29_D5_D8; P3; P31; P32; P5; P51G; TE 
+
+ 
+------------------
+Summary for variable:  lfsa_eegan2
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   THS 
+
+ 
+ nace_r2 :
+   A; B; C; D; E; F; G; H; I; J; K; L; M; N; NRP; O; P; Q; R; S; T; TOTAL; U 
+
+ 
+------------------
+Summary for variable:  prc_hicp_aind
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   INX_A_AVG; RCH_A_AVG 
+
+ 
+ coicop :
+   AP; APF; APM; AP_NNRG; AP_NRG; CP00; CP01; CP011; CP0111; CP01111; CP01112; CP01113; CP01114; CP01115; CP01116; CP01117; CP01118; CP0112; CP01121; CP01122; CP01123; CP01124; CP01125; CP01126; CP01127; CP01128; CP0113; CP01131; CP01132; CP01133; CP01134; CP01135; CP01136; CP0114; CP01141; CP01142; CP01143; CP01144; CP01145; CP01146; CP01147; CP0115; CP01151; CP01152; CP01153; CP01154; CP01155; CP0116; CP01161; CP01162; CP01163; CP01164; CP0117; CP01171; CP01172; CP01173; CP01174; CP01175; CP01176; CP0118; CP01181; CP01182; CP01183; CP01184; CP01185; CP01186; CP0119; CP01191; CP01192; CP01193; CP01194; CP01199; CP012; CP0121; CP01211; CP01212; CP01213; CP0122; CP01221; CP01222; CP01223; CP02; CP021; CP0211; CP02111; CP02112; CP0212; CP02121; CP02122; CP02123; CP02124; CP0213; CP02131; CP02132; CP02133; CP02134; CP022; CP02201; CP02202; CP02203; CP03; CP031; CP0311; CP0312; CP03121; CP03122; CP03123; CP0313; CP03131; CP03132; CP0314; CP03141; CP03142; CP032; CP0321; CP03211; CP03212; CP03213; CP0322; CP04; CP041; CP0411; CP0412; CP04121; CP04122; CP043; CP0431; CP0432; CP04321; CP04322; CP04323; CP04324; CP04325; CP04329; CP044; CP0441; CP0442; CP0443; CP0444; CP04441; CP04442; CP04449; CP045; CP0451; CP0452; CP04521; CP04522; CP0453; CP0454; CP04541; CP04549; CP0455; CP05; CP051; CP0511; CP05111; CP05112; CP05113; CP05119; CP0512; CP05121; CP05122; CP05123; CP0513; CP052; CP05201; CP05202; CP05203; CP05204; CP05209; CP053; CP0531; CP05311; CP05312; CP05313; CP05314; CP05315; CP05319; CP0531_0532; CP0532; CP05321; CP05322; CP05323; CP05324; CP05329; CP0533; CP054; CP05401; CP05402; CP05403; CP05404; CP055; CP0551; CP05511; CP05512; CP0552; CP05521; CP05522; CP05523; CP056; CP0561; CP05611; CP05612; CP0562; CP05621; CP05622; CP05623; CP05629; CP06; CP061; CP0611; CP0612; CP06121; CP06129; CP0612_0613; CP0613; CP06131; CP06132; CP06133; CP06139; CP062; CP0621; CP06211; CP06212; CP0621_0623; CP0622; CP0623; CP06231; CP06232; CP06239; CP063; CP07; CP071; CP0711; CP07111; CP07112; CP0712; CP0712-0714; CP0713; CP072; CP0721; CP07211; CP07212; CP07213; CP0722; CP07221; CP07222; CP07223; CP07224; CP0723; CP0724; CP07241; CP07242; CP07243; CP073; CP0731; CP07311; CP07312; CP0732; CP07321; CP07322; CP0733; CP07331; CP07332; CP0734; CP07341; CP07342; CP0735; CP0736; CP07361; CP07362; CP07369; CP08; CP081; CP08101; CP08109; CP0820; CP08201; CP08202; CP08203; CP08204; CP082_083; CP0830; CP08301; CP08302; CP08303; CP08304; CP08305; CP09; CP091; CP0911; CP09111; CP09112; CP09113; CP09119; CP0912; CP09121; CP09122; CP09123; CP0913; CP09131; CP09132; CP09133; CP09134; CP0914; CP09141; CP09142; CP09149; CP0915; CP092; CP0921; CP09211; CP09212; CP09213; CP09214; CP09215; CP0921_0922; CP0922; CP09221; CP09222; CP0923; CP093; CP0931; CP09311; CP09312; CP0932; CP09321; CP09322; CP09323; CP0933; CP09331; CP09332; CP0934; CP09341; CP09342; CP0934_0935; CP0935; CP094; CP0941; CP09411; CP09412; CP0942; CP09421; CP09422; CP09423; CP09424; CP09425; CP09429; CP095; CP0951; CP09511; CP09512; CP09513; CP09514; CP0952; CP09521; CP09522; CP0953; CP0953_0954; CP0954; CP09541; CP09549; CP096; CP09601; CP09602; CP10; CP101; CP10101; CP10102; CP102; CP103; CP104; CP105; CP11; CP111; CP1111; CP11111; CP11112; CP1112; CP112; CP11201; CP11202; CP11203; CP12; CP121; CP1211; CP12111; CP12112; CP12113; CP1212; CP12121; CP12122; CP1212_1213; CP1213; CP12131; CP12132; CP123; CP1231; CP12311; CP12312; CP12313; CP1232; CP12321; CP12322; CP12323; CP12329; CP124; CP12401; CP12402; CP12403; CP12404; CP125; CP1252; CP1253; CP12532; CP1254; CP12541; CP12542; CP1255; CP126; CP12621; CP12622; CP127; CP12701; CP12702; CP12703; CP12704; EDUC_HLTH_SPR; ELC_GAS; FOOD; FOOD_NP; FOOD_P; FOOD_P_X_ALC_TBC; FOOD_S; FROOPP; FUEL; GD; IGD; IGD_NNRG; IGD_NNRG_D; IGD_NNRG_ND; IGD_NNRG_SD; NRG; NRG_FOOD_NP; NRG_FOOD_S; SERV; SERV_COM; SERV_HOUS; SERV_MSC; SERV_REC; SERV_REC_HOA; SERV_REC_X_HOA; SERV_TRA; TOT_X_ALC_TBC; TOT_X_AP; TOT_X_APF; TOT_X_APM; TOT_X_EDUC_HLTH_SPR; TOT_X_FOOD_S; TOT_X_FROOPP; TOT_X_FUEL; TOT_X_HOUS; TOT_X_NRG; TOT_X_NRG_FOOD; TOT_X_NRG_FOOD_NP; TOT_X_NRG_FOOD_S; TOT_X_TBC 
+
+ 
+------------------
+Summary for variable:  ilc_di12
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_il :
+   GINI_HND 
+
+ 
+------------------
+Summary for variable:  ilc_di11
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_il :
+   S80_S20 
+
+ 
+------------------
+Summary for variable:  lfst_r_lmder
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC 
+
+ 
+ statinfo :
+   DISP_NUTS2; DISP_NUTS3 
+
+ 
+------------------
+Summary for variable:  demo_mlexpec
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   YR 
+
+ 
+------------------
+Summary for variable:  hlth_hlye
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ indic_he :
+   F_0_DFLE; F_0_DFLEPC; F_0_LE; F_50_DFLE; F_50_DFLEPC; F_50_LE; F_65_DFLE; F_65_DFLEPC; F_65_LE; M_0_DFLE; M_0_DFLEPC; M_0_LE; M_50_DFLE; M_50_DFLEPC; M_50_LE; M_65_DFLE; M_65_DFLEPC; M_65_LE 
+
+ 
+------------------
+Summary for variable:  hlth_dm060
+Please pick one of the following items for each list component (variable):
+ 
+ 
+ unit :
+   PC; PC_POP; THS_PER 
+
+ 
+ lev_limit :
+   NONE; SEV; SM_SEV; SOME; TOTAL 
+
+ 
+ subjnmon :
+   EM_D; EM_E; EM_FE; EM_GD; EM_SD; EM_VE 
+

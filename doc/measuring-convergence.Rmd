@@ -1,0 +1,1578 @@
+---
+title: "Convergence monitoring"
+author: "<br>Federico M. Stefanini, Nedka D. Nikiforova, Chiara Litardi, Eleonora Peruffo and Massimiliano Mascherini"
+date: "`r Sys.Date()` <br><br> Index:"
+output:   
+  rmarkdown::html_vignette:
+    fig_caption: yes
+    toc: true
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Convergence-monitoring}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+  % \VignetteDepends{ggplot2,dplyr,tidyverse,eurostat,purrr,tibble,tidyr,formattable,kableExtra,caTools,gridExtra,knitr,magrittr,readr,readxl}
+editor_options:
+  chunk_output_type: console
+---
+  
+  
+
+
+
+
+
+
+```{r setup, include = FALSE}
+require(ggplot2)
+require(dplyr)
+require(tidyverse)
+require(convergEU)
+require(eurostat)
+require(purrr)
+require(tibble)
+require(tidyr)
+require(formattable) 
+require(kableExtra)
+require(caTools)
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+
+```
+
+
+<br><br><br>
+The evaluation of convergence is 
+important not only for determining 
+the dynamic of member states in the EU
+but also as a support to policy makers. 
+
+The R package *convergEU* is a suite of functions
+to download, clean and analyze some convergence
+features.
+
+
+
+In this document,  the package  *convergEU* 
+is described and the main functionalities illustrated.
+
+
+
+
+# Datasets on EU member states
+
+Two types of sources are considered:
+data produced by Eurofound, available without
+and active Internet connection,
+and Eurostat data that can be downloaded
+on the fly, upon necessity from this package.
+
+
+
+##  Locally accessible datasets
+
+Some datasets are accessible from package  *convergEU* 
+using the R function *data()*, for example :
+```{r,eval=FALSE}
+data("emp_20_64_MS",package = "convergEU")
+head(emp_20_64_MS)
+```
+
+Eurofound datasets are
+locally available within the  *convergEU* package, see:
+```{r,eval=FALSE}
+data(package = "convergEU")
+```
+
+
+
+A description of the above data is available 
+by the R help, for example:
+```{r,eval=FALSE}
+help(emp_20_64_MS)
+```
+
+Eurofond local data are considered below:
+```{r}
+require(convergEU)
+data(dbEurofound)
+head(dbEurofound)
+```
+where variable names are:
+```{r}
+names(dbEurofound)
+```
+and time ranges in the interval:
+```{r}
+c(min(dbEurofound$time), max(dbEurofound$time))
+```
+and the dataset is not complete in such a time range
+for all considered countries.
+
+Further details on Eurofound dataset are available 
+as follows (metainformation):
+```{r}
+data(dbEUF2018meta)
+print(dbEUF2018meta,n=20,width=100)
+```
+**NOTE: within convergeEU package, Eurofound data are statically stored**.
+Please update this package to have the most recent version of Eurofound data. 
+
+
+The first step of an analysis is data preparation.
+This amounts to choose a time  interval, an indicator and a set of countries
+(MS, Member States), for example:
+```{r}
+convergEU_glb()$EU12$memberStates$codeMS
+```
+thus, selecting "lifesatisf" from the column "Code\_in\_database"
+```{r}
+myTB <- extract_indicator_EUF(
+    indicator_code = "lifesatisf", #Code_in_database
+    fromTime=2003,
+    toTime=2016,
+    gender= c("Total","Females","Males")[2],
+    countries= convergEU_glb()$EU12$memberStates$codeMS
+    )
+  
+myTB
+```
+which results in a complete dataset ready for further analysis.
+**IMPORTANT:**  the analysis of convergence is performed on clean and imputed data, i.e.
+ a tidy dataset in the format years by countries.
+This means that the dataset must always have these characteristics:
+
+If missing values are present, then imputation is required,
+as described in the next sections.
+
+
+Another illustrative example follows.
+```{r}
+print(dbEUF2018meta,n=20,width=100)
+ 
+names(convergEU_glb())
+myTB <- extract_indicator_EUF(
+    indicator_code = "JQIintensity_i", #Code_in_database
+    fromTime= 1965,
+    toTime=2016,
+    gender= c("Total","Females","Males")[1],
+    countries= convergEU_glb()$EU27_2020$memberStates$codeMS
+    )
+  
+print(myTB$res,n=35,width=250)
+```
+
+Imputation must take place before doing any analysis:
+```{r,out.width="100%"}
+myTBinp <- impute_dataset(myTB$res, timeName = "time",
+                          countries=convergEU_glb()$EU27_2020$memberStates$codeMS,
+                          tailMiss = c("cut", "constant")[2],
+                          headMiss = c("cut", "constant")[2]) 
+print(myTBinp$res,n=35,width=250)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+## Metaresults and  missing values check
+
+
+Several functions in *convergEU* package
+return a list with metainformation,
+that is three components: *res, msg, err*.
+The first list component, *res*, is the actual result, 
+if computed.
+The second component, *msg* is a message
+decorating the computed result,
+possibly a warning.
+The third component, *err*, is
+an error message or a list of errors
+when a result is not computed.
+Below this behavior is illustrated
+for function *check_data*.
+
+
+The structure of the standard dataset is
+a time by countries rectangular table.
+All variables are quantitative.
+The following function check for such features:
+```{r}
+check_data(emp_20_64_MS)
+```
+where the list component *res* is TRUE,
+that is all checks are passed.
+
+
+In case of qualitative variable or missing data
+checks fail, for example if time is qualitative:
+```{r}
+tmp <-  emp_20_64_MS
+tmp <-  mutate(tmp, time=factor(emp_20_64_MS$time))
+check_data(tmp)
+```
+the *err* component explains what went wrong.
+
+Similar errors are signaled if the dataset
+is not complete:
+```{r}
+tmp <-  emp_20_64_MS 
+tmp[3:6,1]<- NA
+check_data(tmp)
+```
+
+
+
+
+
+## Imputation for artificially generated missing values in the  Eurofound database
+
+
+Let's consider the following  indicator from the  Eurofound database:
+```{r}
+
+myTB <- extract_indicator_EUF(
+    indicator_code = "exposdiscr_p", #Code_in_database
+    fromTime=1966,
+    toTime=2016,
+    gender= c("Total","Females","Males")[1],
+    countries= convergEU_glb()$EU12$memberStates$codeMS
+    )
+```
+where missing value are  absent
+```{r}
+sapply(myTB$res,function(vx)sum(is.na(vx)))
+```
+thus we introduce some missing values and  take further years for testing purposes:
+```{r}
+myTB2 <- dplyr::bind_rows(myTB,myTB,myTB)
+myTB2[["time"]][1:3] <- c(1975,1980,1985.0)
+myTB2[["time"]][4:6] <- c(1990,1995,2000.0)
+
+for(aux in 3:14){
+  myTB2[[aux]][c(1:3,4:6)] <-   myTB2[[aux]][c(1:3,4:6)] + runif(6,-2.5,2.5)
+}
+
+myTB2[["BE"]][1:2] <-  NA
+myTB2[["DE"]][8:9] <-  NA
+myTB2[["IT"]][c(3,4, 6,7,8)] <-  NA
+myTB2[["DK"]][6] <-  NA
+myTB2
+```
+
+Now an imputation function may be called to prepare data for
+calculations on convergence.
+The two examples below differ about what to do with 
+missing starting values.
+```{r}
+toBeProcessed <- c( "IT","BE", "DE", "DK","UK")
+# debug(impute_dataset)
+
+impute_dataset(myTB2, countries=toBeProcessed,
+                            timeName = "time",
+                            tailMiss = c("cut", "constant")[1],
+                            headMiss = c("cut", "constant")[1]) 
+
+impute_dataset(myTB2, countries=toBeProcessed,
+                            timeName = "time",
+                            tailMiss = c("cut", "constant")[2],
+                            headMiss = c("cut", "constant")[1]) 
+
+```
+The above calculations passed numerical tests and comparisons.
+If a country is processed but it has no missing, then no numerical value change.
+
+
+# On Convergence
+ 
+Several measures of convergence have been recently 
+proposed by Eurofound 
+(Eurofound (2018), Upward convergence in the EU: Concepts, measurements and indicators, Publications Office of the European Union, Luxembourg;
+by: Massimiliano Mascherini, Martina Bisello, Hans Dubois and Franz Eiffe)
+
+In this section each each measure is considered by one or more examples.  
+
+
+
+
+
+## Beta-convergence
+
+Let's assume we have a dataset (tibble) of sorted times by countries values.
+The calculations are performed according to the  following linear model:
+$$
+ ln(y_{m,i,t+\tau})-ln(y_{m,i,t}) = \beta_0 + \beta_1 ln(y_{m,i,t}) +\epsilon_{m,i,t}
+$$
+where $m$ represent the member state of EU (country), $i$ refers to an indicator
+of interest, $t$ is the reference time and $\tau \in \{1,2,\ldots\}$
+the length of the time window (typically $1$ or more years).
+
+In the simplest case, just two time values are considered, $t$ and $t+\tau$,
+while in a more  general setup all observed times in set
+$\{t,t+1,\ldots,t+\tau-1, t+\tau\}$ are included into regression.
+<br>
+
+<br> 
+In this more general case,
+the current implementation of beta-convergence function
+always maintain the same reference time across different years and
+it  divides the left hand side by the amount of time elasped as an option,
+that is the alternative formula:
+$$
+ \tau^{-1}(ln(y_{m,i,t+\tau})-ln(y_{m,i,t})) = \beta_0 + \beta_1 ln(y_{m,i,t}) +\epsilon_{m,i,t}
+$$
+is available.
+<br> 
+
+
+The output of *beta_conv()* is a list
+in which transformed data, the point estimate of $\beta_1$
+and a standard two tails test is reported (p-value and adjusted R squared).
+One tail test $H_0: \beta_1 \geq 0$ against $H_1: \beta1< 0$
+might be of some interest, but it is not implemented.
+
+
+Below an example on how to invoke the function:
+```{r}
+require(ggplot2)
+require(dplyr)
+require(tibble)
+
+testTB <- tribble(
+  ~time, ~countryA ,  ~countryB,  ~countryC,
+    2000,     0.8,   2.7,    3.9,
+    2001,     1.2,   3.2,    4.2,
+    2002,     0.9,   2.9,    4.1,
+    2003,     1.3,   2.9,    4.0,
+    2004,     1.2,   3.1,    4.1,
+    2005,     1.2,   3.0,    4.0
+  )
+ 
+res <- beta_conv(tavDes = testTB, time_0 = 2002, time_t = 2004, 
+                 all_within = TRUE, 
+                 timeName = "time")
+res
+```
+but note that this is not the common practice,
+which considers the first and last time instead.
+
+
+In order to consider just two times, starting and ending times,
+the option *all_within = FALSE* must be specified
+```{r}
+res <- beta_conv(tavDes = testTB, time_0 = 2002, time_t = 2004, 
+                 all_within = FALSE, 
+                 timeName = "time")
+res
+
+```
+Note that *all_within = FALSE* is the default.
+
+
+
+
+## Sigma-convergence
+
+
+The key concept in sigma-convergence is variability  with respect to the mean.
+Let $Y_{m,i,t}$ be the value of indicator $i$ for member state $m$ at time $t$,
+and $\overline{Y}_{A,i,t}$ the average over aggregation $A$, for example $A = EU27_2020$,
+than:    
+
+  * the average is  $\overline{Y}_{A,i,t} = n(A)^{-1}\sum_{m \in A} Y_{m,i,t}$,
+    where $n(A)$ is the number of member states within aggregation $A$;       
+  * the standard deviation is $s_{A,i,t} = \sqrt(n(A)^{-1} \sum_{m\in A} (Y_{m,i,t} - \overline{Y}_{A,i,t})^2)$;     
+  * the coefficient of variation is $CV(A,i,t) = 100\cdot \frac{s_{A,i,t}}{\overline{Y}_{A,i,t}}$.     
+
+For each year, the above summaries are calculated to quantify if a reduction in heterogeneity took place.
+
+
+
+In this section we assume that all member states
+contributing to the unweighted mean are contained into the dataset,
+for example:
+```{r}
+testTB <- tribble(
+  ~time, ~countryA ,  ~countryB,  ~countryC,
+    2000,     0.8,   2.7,    3.9,
+    2001,     1.2,   3.2,    4.2,
+    2002,     0.9,   2.9,    4.1,
+    2003,     1.3,   2.9,    4.0,
+    2004,     1.2,   3.1,    4.1,
+    2005,     1.2,   3.0,    4.0
+  )
+
+sigma_conv(testTB,timeName="time")
+```
+
+It is possible to select a time window, as follows:
+```{r}
+sigma_conv(testTB,timeName="time",time_0 = 2002,time_t = 2004)
+sigma_conv(testTB,time_0 = 2002,time_t = 2004)
+
+```
+
+
+
+
+
+More interesting calculations deal with an Eurofound
+dataset *emp_20_64_MS*.
+Note that all and only countries in EU28 are included,
+those that contribute to the average:
+```{r}
+data(emp_20_64_MS)
+mySTB <- sigma_conv(emp_20_64_MS)
+mySTB
+```
+
+
+As a first step, the departure from the mean 
+is characterized 
+```{r}
+res <- departure_mean(oriTB = emp_20_64_MS, sigmaTB = mySTB$res)
+names(res$res)
+res$res$departures
+```
+where $-1,0,1$ indicates values respectively below $-1$,
+within the interval $(-1,1)$ and above $+1$.
+Details  on the contribution of each MS to the variance 
+at a given time $t$ is evaluate by the square of the difference
+$(Y_{m,i,t} - \overline{Y}_{EU27,i,t})^2$ 
+between the indicator $i$ of country $m$ at time $t$
+and the unweighted average over member states, say EU27:
+```{r}
+res$res$squaredContrib
+```
+
+
+It is also possible to decompose the numerator of the variance, called deviance,
+at each time in order to appreciate the  percentage of 
+contribution provided by each member state to the  total deviance,
+$$100 \cdot \frac{(Y_{m,i,t} - \overline{Y}_{EU27,i,t})^2}{
+ \sum_{m}  (Y_{m,i,t} - \overline{Y}_{EU27,i,t})^2
+}$$ 
+for the indicator $i$ of country $m$ at time $t$.
+
+```{r}
+##  sigma_conv(testTB,timeName="time",time_0 = 2002,time_t = 2004)
+res$res$devianceContrib
+```
+thus each row adds to $100$.
+
+
+It is possible  to produce a graphical output about the
+main features of country time series, as shown below:
+```{r,eval=T,fig.width=7,fig.height=9}
+myGG <- graph_departure(res$res$departures,
+                timeName = "time",
+                displace = 0.25,
+                displaceh = 0.45,
+                dimeFontNum = 4,
+                myfont_scale = 1.35,
+                x_angle = 45,
+                color_rect = c("-1"='red1', "0"='gray80',"1"='lightskyblue1'),
+                axis_name_y = "Countries",
+                axis_name_x = "Time",
+                alpha_color = 0.9
+                )
+myGG
+
+```
+
+
+Any selection of countries is feasible:
+```{r,eval=T}
+#myWW1<- warnings()
+myGG <- graph_departure(res$res$departures[1:10],
+                timeName = "time",
+                displace = 0.25,
+                displaceh = 0.45,
+                dimeFontNum = 4,
+                myfont_scale = 1.35,
+                x_angle = 45,
+                color_rect = c("-1"='red1', "0"='gray80',"1"='lightskyblue1'),
+                axis_name_y = "Countries",
+                axis_name_x = "Time",
+                alpha_color = 0.29
+                )
+
+myGG
+```
+
+ 
+
+ 
+ 
+ 
+## Gamma-convergence
+
+We now introduce gamma convergence by an index
+based on ranks.
+
+
+Let $y_{m,i,t}$ be the value of indicator $i$ for member state $m$ at time
+$t=0,1,\ldots, T$,
+and $\{ \tilde{y}_{m,i,t}: m \in A )$ the ranks for indicator $i$
+over member states in the  reference set $A$, for example $A = EU27$,
+at a given time $t$.
+The sum of ranks within member state $m$ is:
+$$
+ \tilde{y}^{(s)}_{m,i} = \sum_{t=0}^T  \tilde{y}_{m,i,t}
+$$
+thus the variance of the sum of ranks over the given interval 
+$$
+Var\left[ \{\tilde{y}^{(s)}_{m,i}: m \in A \} \right]
+$$
+may be compared to the
+variance of ranks in the reference time $t=0$:
+$$
+Var\left[ \{\tilde{y}_{m,i,0}: m \in A \} \right]
+$$
+
+
+The Kendall index KI, with respect to aggregation $A$ 
+of member states for the indicator  $i$ over a
+given time interval is:
+$$
+KI(A,i,T) =  \frac{Var\left[ \{\tilde{y}^{(s)}_{m,i}: m \in A \} \right]
+      }{
+      (T+1)^2  ~~Var\left[\{\tilde{y}_{m,i,0}: m \in A \}\right] }
+$$
+
+
+
+The measure of  gamma-convergence is obtained with the following function:
+```{r}
+gamma_conv(emp_20_64_MS,2002,2016)
+```
+
+
+
+
+
+
+
+
+
+
+Note the starting time is zero, the reference,
+but first a copy of the dataset is performed.
+```{r}
+(timeCounTB <- testTB)
+```
+
+Now we move to ranks within time using *rank()*:
+```{r}
+tmp <- c( 3, 6, 9, 1, 12)
+rank(tmp)
+```
+therefore with the above data:
+```{r}
+# debug(gamma_conv)
+(gamma_conv(timeCounTB,ref=2000,last=2005,timeName = "time"))
+(gamma_conv(timeCounTB,ref=2000,last=2004,timeName = "time"))
+(gamma_conv(timeCounTB,ref=2000,last=2003,timeName = "time"))
+(gamma_conv(timeCounTB,ref=2000,last=2002,timeName = "time"))
+(gamma_conv(timeCounTB,ref=2000,last=2001,timeName = "time"))
+```
+
+and changing reference year:
+```{r}
+(gamma_conv(timeCounTB,ref=2001,last=2005,timeName = "time"))
+(gamma_conv(timeCounTB,ref=2002,last=2004,timeName = "time"))
+```
+
+
+Now we exchange values and calculate gamma-convergence:
+```{r}
+timeCounTB2 <- timeCounTB
+timeCounTB2[2,2:4] <-  timeCounTB[2,4:2]
+timeCounTB2[4,2:4] <-  timeCounTB[4,c(4,2,3)]
+timeCounTB2
+
+gamma_conv(timeCounTB2,last=2005,ref=2000, timeName = "time",printRanks = T)
+```
+and after random permutation:
+```{r}
+timeCounTB3 <- cbind(timeCounTB[1],t(apply(timeCounTB,1,
+                                        function(vet)vet[sample(2:4,3)])))
+
+
+timeCounTB3
+(gamma_conv(timeCounTB3,last=2005,ref=2000, timeName = "time",printRanks = T))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Delta-convergence
+
+
+Delta-convergence can be calculated as follows:
+
+```{r,echo=FALSE,eval=FALSE}
+
+timeCounTB <- tribble(
+  ~time, ~countryA ,  ~countryB,  ~countryC,
+    0,     0.8,   2.7,    3.9,
+    1,     1.2,   3.2,    4.2,
+    2,     0.9,   2.9,    4.1,
+    3,     1.3,   2.9,    4.0,
+    4,     1.2,   3.1,    4.1,
+    5,     1.2,   3.0,    4.0
+  )
+timeCounTB
+```
+
+```{r}
+delta_conv(timeCounTB)
+```
+
+
+
+
+
+
+
+
+
+
+## Absolute change
+
+Absolute change as described in the reserved Eurofound Annex
+is defined as:
+$$
+\Delta y_{m,i,t} = y_{m,i,t} - y_{m,i,t-1}
+$$
+for country $m$, indicator $i$ at time $t$.
+
+The R function *abso_change* calculates  the above quantity,
+for example in the *emp_20_64_MS* dataset
+```{r}
+data(emp_20_64_MS)
+mySTB <- abso_change(emp_20_64_MS, 
+                        time_0 = 2005, 
+                        time_t = 2010,
+                        all_within=TRUE,
+                        timeName = "time")
+names(mySTB$res)
+```
+thus the above equation results in:
+```{r}
+mySTB$res$abso_change
+```
+The sum of absolute values
+$$
+\sum_{t=t_0+1}^{} | \Delta y_{m,i,t}|  
+$$
+is:
+```{r}
+round(mySTB$res$sum_abs_change,4)
+```
+and such sum can be divided by the number of pair of years
+so that the result is an average per pair of years:
+```{r}
+round(mySTB$res$average_abs_change,4)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Convergence measures  on Eurofound lifesatisf indicator
+
+Here we assume that larger the index, better the performance.
+
+Let's load the Eurofound indicator *lifesatisf*:
+```{r}
+workDF <- extract_indicator_EUF(
+  indicator_code ="lifesatisf", #Code_in_database
+  fromTime=2000,
+  toTime =2018,
+  gender= c("Total","Females","Males")[1],
+  countries =  convergEU_glb()$EU27_2020$memberStates$codeMS)
+workDF
+
+wDF <- workDF$res
+```
+then we ask if it is complete or some missing values are present:
+```{r}
+check_data(select(wDF,-sex),timeName="time")
+```
+thus at least one missing value is present.
+In the next step, imputation of missing values is performed:
+```{r}
+wDFI <- impute_dataset(select(wDF,-sex),
+               countries= names(select(wDF,-sex,-time)),
+               timeName = "time",
+               tailMiss = c("cut", "constant")[2],
+               headMiss = c("cut", "constant")[1])
+```
+and some checking is done:
+```{r}
+check_data(wDFI$res,timeName="time")
+```
+which returns TRUE.
+
+
+First, we calculate the EU unweighted average of emp:
+```{r}
+wwTB <- (wDFI$res %>%
+   average_clust(timeName="time",cluster="EU27"))$res
+
+wwTB$EU27
+```
+
+Time series can be plotted: 
+```{r}
+mini_EU <- min(wwTB$EU27)
+maxi_EU <- max(wwTB$EU27)
+
+qplot(time, EU27, data=wwTB,
+      ylim=c(mini_EU,maxi_EU))+geom_line(colour="navy blue")+
+      ylab("lifesatisf")
+```
+
+
+
+### Beta convergence
+
+Now the beta-convergence is calculated for just two years:
+```{r}
+betaRes <- beta_conv(wDFI$res,time_0=2007, time_t=2011, all_within=FALSE)
+betaRes 
+```
+
+
+<!-- 
+now more years are considered
+{r}
+betaRes <- beta_conv(wDFI$res,time_0=2007, time_t=2016, all_within=TRUE)
+-->
+
+
+
+
+A plot of transformed data and the straight line may be useful:
+```{r,out.width="100%"}
+mybetaplot<-beta_conv_graph(betaRes,
+                            indiName = 'Mean Life Satisfaction',
+                            time_0 = 2007,
+                            time_t = 2011)
+mybetaplot
+```
+Note that label are replicated as many times as 
+the number of included  subsequent years. 
+
+
+
+
+
+
+
+### Sigma  convergence
+
+
+Here we go with calculating the sigma-convergence:
+```{r}
+mysigmares<-sigma_conv(wwTB)
+#mysigmares
+```
+It is also possible to obtain a graphical representation of the standard deviation and the coefficient of variation obtained for the Sigma convergence by invoking the *sigma_conv_graph* function as follows:
+
+```{r,fig.width=5,fig.height=4,out.width="65%"}
+mysigmaplot<-sigma_conv_graph(sigmaconvOut=mysigmares, 
+         time_0 = 2007, 
+         time_t = 2011,
+        aggregation='EU27_2020')
+mysigmaplot
+```
+
+
+
+
+
+
+
+### Gamma convergence
+
+
+Let's reload Eurofound data:
+```{r}
+workDF <- extract_indicator_EUF(
+  indicator_code ="lifesatisf", #Code_in_database
+  fromTime=2000,
+  toTime =2018,
+  gender= c("Total","Females","Males")[1],
+  countries =  convergEU_glb()$EU27_2020$memberStates$codeMS)
+wDFI <- impute_dataset(select(workDF$res,-sex),
+               countries= names(select(wDF,-sex,-time)),
+               timeName = "time",
+               tailMiss = c("cut", "constant")[2],
+               headMiss = c("cut", "constant")[1])
+
+check_data(wDFI$res,timeName="time")
+```
+ 
+ 
+ 
+ 
+
+Now  gamma-convergence is computed:
+```{r}
+gamma_conv(wDFI$res,ref=2003,last=2016,timeName = "time")
+```
+or equivalently:
+```{r}
+tmpRes <- gamma_conv(wDFI$res,ref=2007,last=2011,timeName = "time")
+```
+
+
+Indeed there is the possibility of performing calculation
+for each pair of subsequent years in the dataset,
+that is, each year is the reference of the subsequent year:
+```{r}
+wDFI$res
+```
+
+```{r}
+gamma_conv_msteps(wDFI$res,
+                  startTime=2003, 
+                  endTime=2016,
+                  timeName = "time")
+
+```
+
+
+
+
+
+### Delta convergence
+
+
+Let $y_{m,i,t}$ be the value of indicator $i$ for member state $m$ at time $t$,
+and $y^{(M)}_{i,t}$ the maximum value  over member states in the 
+reference set $A$, for example $A = EU27$:
+$$
+y^{(M)}_{i,t} = max(\{ y_{m,i,t}: m \in A\})
+$$
+
+The distance of a member state $m$ from the top performer at time $i$ is:
+$$
+y^{(M)}_{i,t} - y_{m,i,t}
+$$
+thus the overall distance at time $t$, called delta, is the sum of distances over the 
+reference set  $A$ of MS:
+$$
+\delta_{i,t} = \sum_{m \in A} (y^{(M)}_{i,t} -  y_{m,i,t})
+$$
+for the considered indicator $i$.
+
+
+
+The measure of  delta-convergence is obtained as follows:
+```{r}
+delta_conv(wwTB)
+```
+
+
+It must be noted that the *delta_conv* function allows to obtain also the declaration of convergence. To this end, the argument *extended* should be specified as *TRUE*. For example, for the *wwTB* indicator the syntax is as follows:
+```{r}
+delta_conv(wwTB,"time", extended=TRUE)
+```
+
+It is also useful to evaluate how much a collection of **MS** deviates from the **EU** mean for a given indicator and a period of time. In order to obtain this further information the *demea_change* function has been implemented in the *convergEU* package:
+```{r}
+res1<-demea_change(wwTB,
+                   timeName="time",
+                   time_0 = 2003,
+                   time_t = 2016,
+                   sele_countries= NA,
+                   doplot=TRUE)
+res1
+```
+
+To plot the calculated differences, the user should invoke the *plot* function as follows:
+```{r,fig.width = 6,out.width="100%"}
+plot(res1$res$res_graph)
+```
+
+
+
+
+
+
+
+
+
+# Support functions
+
+There are several auxiliary functions that help to prepare
+the tidy dataset time by member states (MS, that is countries
+in EU),
+which is needed in almost all computations.
+Here the most important resources are described.  
+
+
+
+
+
+
+## Summaries and clusters of countries
+
+An important summary is obtained  
+as  unweighted average of country values.
+The cluster of considered countries may be specified
+and is also stored within the function generating global
+static objects and tables, called
+*convergEU_glb()*.
+The  illustration of this function exploits 
+the *emp_20_64_MS* dataframe in *convergEU*
+package.
+
+First note that the EU area is made by the following
+MS:
+```{r}
+convergEU_glb()$Eurozone
+```
+while labels representing the 28 MS are:
+```{r}
+convergEU_glb()$EU27_2020
+```
+
+The list of known MS labels is shown in the appendix.
+
+
+For example, the unweighted average
+in the *emp_20_64_MS* dataset is:
+```{r}
+testTB <- emp_20_64_MS
+average_clust(testTB,timeName = "time",cluster = "EU27")$res[,c(1,30)]
+```
+while for EU12 is:
+```{r}
+average_clust(testTB,timeName = "time",cluster = "EU12")$res[,c(1,30)]
+```
+
+
+
+An unknown label, like "EUspirit", causes computation error:
+```{r}
+average_clust(testTB,timeName = "TTime",cluster = "EUspirit")
+```
+
+
+
+
+
+## Imputing missing values using a straight line
+
+The basic imputation  method is deterministic, like the average of 
+interval endpoints, but it assumes that a linear
+change of an indicator  happened between the two 
+observed time points flanking a chunk of missing values.
+
+```{r,out.width="65%"} 
+intervalTime <-  c(1999,2000,2001) 
+intervalMeasure <- c( 66.5, NA,87.2) 
+currentData <- tibble(time= intervalTime, veval= intervalMeasure) 
+currentData 
+resImputed <- impute_dataset(currentData,
+                           countries = "veval",
+                           timeName = "time",
+                           tailMiss = c("cut", "constant")[2],
+                           headMiss = c("cut", "constant")[2]) 
+resImputed  
+``` 
+ 
+ 
+```{r,echo=FALSE,out.width="65%"} 
+tmp <-  as.data.frame(currentData[ c(1,3),] )
+tmp2 <- as.data.frame(resImputed$res[2,] )
+ 
+myg <- ggplot(as.data.frame(resImputed$res),  mapping=aes(x=time,y=veval)) + 
+  geom_point() + 
+  geom_line(data=resImputed$res,col="red") + 
+  geom_point(data=tmp,mapping=aes(x=time,y=veval), 
+              size=4, 
+              colour="blue")  + 
+  geom_point(data= tmp2, 
+             aes(x=time,y=veval),size=4,alpha=1/3,col="black") + 
+  xlab("Time") + ylab("Measure / Index") +  
+  ggtitle( "Blue points are observed values (grey ones are missing) \n") 
+   
+myg 
+``` 
+ 
+ 
+If several missing values are present in a  row 
+```{r} 
+intervalTime <-  c(1999,2000,2001,2002,2003) 
+intervalMeasure <- c( 66.5, NA,NA,NA,87.2) 
+currentData <- tibble(time= intervalTime, veval= intervalMeasure) 
+currentData
+resImputed <- impute_dataset(currentData,
+                           countries = "veval",
+                           timeName = "time",
+                           tailMiss = c("cut", "constant")[2],
+                           headMiss = c("cut", "constant")[2]) 
+tmp <-  as.data.frame(currentData[ c(1,5),] )
+tmp2 <- as.data.frame(resImputed$res[2:4,] )
+
+resImputed  
+``` 
+ 
+ 
+```{r,echo=FALSE,out.width="65%"} 
+myg <- ggplot(as.data.frame(resImputed$res),  mapping=aes(x=time,y=veval)) + 
+  geom_point() + 
+  geom_line(data=resImputed$res,col="red") + 
+  geom_point(data=tmp,mapping=aes(x=time,y=veval), 
+              size=4, 
+              colour="blue")  + 
+  geom_point(data= tmp2, 
+             aes(x=time,y=veval),size=4,alpha=1/3,col="black") + 
+  xlab("Time") + ylab("Measure / Index") +  
+  ggtitle( "Blue points are observed values (grey ones are missing) \n") 
+   
+myg 
+
+``` 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+## Weighted average smoothing of a complete dataset
+
+
+It may be of interest to assume that part of the variability 
+observed in a country on a given index is **not structural**,
+i.e. not due to causal determinants by to transient
+fluctuations.
+Furthermore, the interest here is not directed towards
+prediction but on smoothing values observed in the whole
+considered time interval.
+
+In such a case a smoothing procedure remove sudden large changes 
+showing a less variable time serie than the original.
+
+Given that here short time series (panel data) are considered,
+a three points weighted average is proposed.
+The smoother substitutes an original raw value $y_{m,i,t}$ of country $m$
+indicator $i$ at time $t$ with the weighted average
+$$\check{y}_{m,i,t}  = y_{m,i,t-1} ~ (1-w)/2   +w ~y_{m,i,t} +y_{m,i,t+1} ~(1-w)/2$$
+where $0< w \leq 1$. The special case $w=1$ corresponds to no smoothing.
+In case of missing values an NA is returned. If the weight is outside
+the interval $(0,1]$ then a NA is returned.
+The first and last values are smoothed using weights $w$ and $1-w$.
+
+After loading data, imputation takes place and finally smoothing is performed.
+Now, countries IT and DE are considered to illustrate the procedure.
+First check if missing values are present:
+```{r}
+workTB <- dplyr::select(emp_20_64_MS, time, IT,DE)
+check_data(workTB)
+```
+thus checking is passed, so we go with the smoothing step
+after deleting the time variable:
+```{r}
+resSM <- smoo_dataset(select(workTB,-time), leadW = 0.149, timeTB= select(workTB,time))
+resSM
+```
+and for a comparison:
+```{r}
+compaTB <- select(bind_cols(workTB, select(resSM,-time)), time,IT,IT1,DE,DE1)
+compaTB
+```
+
+A graphical output shows changes for "IT", with original
+index in blue and smoothed index in red:
+```{r,out.width="70%"}
+qplot(time,IT,data=compaTB) + 
+  geom_line(colour="navyblue") +
+  geom_line(aes(x=time,y=IT1),colour="red") +
+  geom_point(aes(x=time,y=IT1),colour="red",shape=8)
+``` 
+
+Similarly for Germany, i.e. "DE":  
+
+```{r,out.width="70%"}
+qplot(time,DE,data=compaTB) + 
+  geom_line(colour="navyblue") +
+  geom_line(aes(x=time,y=DE1),colour="red") +
+  geom_point(aes(x=time,y=DE1),colour="red",shape=8)
+
+```
+
+A weight equal to 1 leaves data unchanged:
+```{r,out.width="70%"}
+resSM <- smoo_dataset(select(workTB,-time), leadW = 1, timeTB= select(workTB,time))
+compaTB <- select(bind_cols(workTB, select(resSM,-time)), time,IT,IT1,DE,DE1)
+qplot(time,IT,data=compaTB) + 
+  geom_line(colour="navyblue") +
+  geom_line(aes(x=time,y=IT1),colour="red") +
+  geom_point(aes(x=time,y=IT1),colour="red",shape=8)
+```
+
+
+**A time window larger than $3$ could be considered, but
+deep thoughts  are recommended on how much economic and social changes
+may happen in $5$ consecutive years.**
+
+
+
+
+
+
+
+
+
+## Moving Average smoother 
+
+
+Several alternative smoothing algorithm are available in R.
+Classical *ma* smoothers are also available from the *caTools* package.
+
+
+The emp_20_64_MS dataset is now chosen for example, first with
+Italy and then
+with Germany as member states of interest.
+
+```{r}
+data(emp_20_64_MS)
+cuTB <- dplyr::tibble(ITori =emp_20_64_MS$IT)
+cuTB <- dplyr::mutate(cuTB,time =emp_20_64_MS$time)
+```
+
+At the beginning and end of this series values are averages on
+smaller and smaller number of observations on the tails:
+```{r}
+
+cuTB <-  dplyr:: mutate(cuTB, IT_k_3= runmean(emp_20_64_MS$IT, k=3, 
+        alg=c("C", "R", "fast", "exact")[4],
+        endrule=c("mean", "NA", "trim", "keep", "constant", "func")[4],
+        align = c("center", "left", "right")[1]))
+
+cuTB <-  dplyr:: mutate(cuTB, IT_k_5= runmean(emp_20_64_MS$IT, k=5, 
+        alg=c("C", "R", "fast", "exact")[4],
+        endrule=c("mean", "NA", "trim", "keep", "constant", "func")[4],
+        align = c("center", "left", "right")[1]))
+
+cuTB <-  dplyr:: mutate(cuTB, IT_k_7= runmean(emp_20_64_MS$IT, k=7, 
+        alg=c("C", "R", "fast", "exact")[4],
+        endrule=c("mean", "NA", "trim", "keep", "constant", "func")[4],
+        align = c("center", "left", "right")[1]))
+
+```
+
+
+```{r}
+myG <- ggplot(cuTB,aes(x=time,y=ITori))+geom_line()+geom_point()+
+       geom_line(aes(x=time,y=IT_k_3),colour="red")+
+       geom_point(aes(x=time,y=IT_k_3),colour="red")+
+       #
+       geom_line(aes(x=time,y=IT_k_5),colour="blue")+
+       geom_point(aes(x=time,y=IT_k_5),colour="blue")+
+       #
+       geom_line(aes(x=time,y=IT_k_7),colour="orange")+
+       geom_point(aes(x=time,y=IT_k_7),colour="orange")+
+       theme(legend.position = c(.5, .5),
+              legend.title = element_text(face = "bold"))
+
+myG
+```
+
+
+
+For Germany, a similar implementation provides the following result:
+
+```{r}
+cuTB <- dplyr::mutate(cuTB, DEori =emp_20_64_MS$DE)
+
+cuTB <-  dplyr:: mutate(cuTB, DE_k_3= runmean(emp_20_64_MS$DE, k=3, 
+        alg=c("C", "R", "fast", "exact")[4],
+        endrule=c("mean", "NA", "trim", "keep", "constant", "func")[4],
+        align = c("center", "left", "right")[1]))
+
+cuTB <-  dplyr:: mutate(cuTB, DE_k_5= runmean(emp_20_64_MS$DE, k=5, 
+        alg=c("C", "R", "fast", "exact")[4],
+        endrule=c("mean", "NA", "trim", "keep", "constant", "func")[4],
+        align = c("center", "left", "right")[1]))
+
+cuTB <-  dplyr:: mutate(cuTB, DE_k_7= runmean(emp_20_64_MS$DE, k=7, 
+        alg=c("C", "R", "fast", "exact")[4],
+        endrule=c("mean", "NA", "trim", "keep", "constant", "func")[4],
+        align = c("center", "left", "right")[1]))
+
+```
+
+
+```{r}
+myG <- ggplot(cuTB,aes(x=time,y=DEori))+geom_line()+geom_point()+
+       geom_line(aes(x=time,y=DE_k_3),colour="red")+
+       geom_point(aes(x=time,y=DE_k_3),colour="red")+
+       #
+       geom_line(aes(x=time,y=DE_k_5),colour="blue")+
+       geom_point(aes(x=time,y=DE_k_5),colour="blue")+
+       #
+       geom_line(aes(x=time,y=DE_k_7),colour="orange")+
+       geom_point(aes(x=time,y=DE_k_7),colour="orange")+
+       theme(legend.position = c(.5, .5),
+              legend.title = element_text(face = "bold"))
+
+myG
+```
+
+The time serie is so short that at $k=7$ a lot of observations are smoothed with 
+different number of observations (shorter at start and end).
+
+
+The above calculations are performed by a function in the *convergEU* package:
+```{r}
+cuTB <-  emp_20_64_MS[,c("time","IT","DE")]
+
+ma_dataset(cuTB, kappa=3, timeName= "time")
+```
+that is a bit less flexible but it produced standard results.
+
+
+
+
+
+
+
+
+
+
+# Scoreboards
+
+The basis of scoreboard are raw values of  an indicator (level, $y_{m,i,t}$)
+for MS $m$ at time $t$ for indicator $i$.
+Differences among subsequent years (change) are as well important, namely
+$$
+y_{m,i,t} - y_{m,i,t-1}
+$$
+thus a function  to calculate these values may be exploited.
+
+Let's consider the dataset *emp_20_64_MS*,
+to calculate such quantities we do the following:
+```{r}
+data(emp_20_64_MS)
+resTB <- scoreb_yrs(emp_20_64_MS,timeName = "time")
+resTB
+```
+where the result is a list of three components:
+the summary statistics, the numerical labels to indicate 
+the interval of the partition a level  belongs to,
+the interval of the partition a change  belongs to.
+
+Numerical labels are assigned as follows (see 
+DRAFT JOINT EMPLOYMENT REPORT FROM THE COMMISSION AND THE COUNCIL):    
+* value $-1$ if a the original level or change is   $y \leq m -1 \cdot s$;   
+* value $-0.5$ if a the original level or change is  $m -1\cdot s < y \leq m - 0.5\cdot s$;   
+* value $0$ if a the original level or change is  $m - 0.5\cdot s< y \leq m +0.5\cdot s$;   
+* value $+0.5$ if a the original level or change is  $m +0.5\cdot s< y \leq m + 1\cdot s$;   
+* value $1$ if a the original level or change is  $y > m +1\cdot s$.      
+
+
+We note that there is the possibility of representing the above summaries as
+coloured plots (TO DO) into scoreboards.
+
+
+For the comparison of a country with the EU average,
+the following steps are recommended, from raw data:
+
+```{r}
+# require(ggplot2)
+# data(emp_20_64_MS)
+selectedCountry <- "IT"
+timeName <-  "time"
+myx_angle <-  45
+
+outSig <- sigma_conv(emp_20_64_MS, timeName = timeName,
+           time_0=2002,time_t=2016)
+miniY <- min(emp_20_64_MS[,- which(names(emp_20_64_MS) == timeName )])
+maxiY <-  max(emp_20_64_MS[,- which(names(emp_20_64_MS) == timeName )])
+estrattore<-  emp_20_64_MS[[timeName]] >= 2002  &  emp_20_64_MS[[timeName]] <= 2016
+ttmp <- cbind(outSig$res, dplyr::select(emp_20_64_MS[estrattore,], -contains(timeName)))
+
+myG2 <- 
+  ggplot(ttmp) + ggtitle(
+  paste("EU average (black, solid) and country",selectedCountry ," (red, dotted)") )+
+  geom_line(aes(x=ttmp[,timeName], y =ttmp[,"mean"]),colour="black") +
+  geom_point(aes(x=ttmp[,timeName],y =ttmp[,"mean"]),colour="black") +
+#        geom_line()+geom_point()+
+    ylim(c(miniY,maxiY)) + xlab("Year") +ylab("Indicator") +
+  theme(legend.position = "none")+
+  # add countries
+  geom_line( aes(x=ttmp[,timeName], y = ttmp[,"IT"],colour="red"),linetype="dotted") + 
+  geom_point( aes(x=ttmp[,timeName], y = ttmp[,"IT"],colour="red")) +
+  ggplot2::scale_x_continuous(breaks = ttmp[,timeName],
+                     labels = ttmp[,timeName]) +
+   ggplot2::theme(
+         axis.text.x=ggplot2::element_text(
+         #size = ggplot2::rel(myfont_scale ),
+         angle = myx_angle 
+         #vjust = 1,
+         #hjust=1
+         ))
+  
+myG2
+```
+
+
+
+
+It is also possible to graphically show departures  in terms of  the above 
+defined partition:
+```{r,fig.height=11}
+obe_lvl <- scoreb_yrs(emp_20_64_MS,timeName = timeName)$res$sco_level_num
+# select subset of time
+estrattore <- obe_lvl[[timeName]] >= 2009 & obe_lvl[[timeName]] <= 2016  
+scobelvl <- obe_lvl[estrattore,]
+
+my_MSstd <- ms_dynam( scobelvl,
+                timeName = "time",
+                displace = 0.25,
+                displaceh = 0.45,
+                dimeFontNum = 3,
+                myfont_scale = 1.35,
+                x_angle = 45,
+                axis_name_y = "Countries",
+                axis_name_x = "Time",
+                alpha_color = 0.9
+                )   
+
+my_MSstd
+```
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+
+# Country fiche
+
+
+The **counvergEU** package provides a function that
+automatically prepares one or more country fiches.
+This function is able to create a directory along an existing path
+and to copy the rmarkdown file representing the template within it.
+The rmarkdown file is parameterized so that passing different parameters
+the compilation takes place with different data, say different 
+indicators and countries.
+
+It is very important to prepare complete data in a tibble (dataset)
+made by a time variable and as many other variables as countries
+that enter into the calculation of the time average.
+Failing to satisfy this requisite causes the use of a wrong mean value
+at each year.
+Nevertheless one key country is specified and some other countries of 
+interest may be listed to better decorate graphs and compare performances.
+
+Below, a call to the  function *go_ms_fish()* illustrates the syntax:  
+
+```r
+go_ms_fish(
+    workDF ='myTB',
+    countryRef ='DE',
+    otherCountries = "c('IT','UK','FR')",
+    time_0 = 2002,
+    time_t = 2016,
+    tName = 'time',
+    indiType = "highBest",
+    aggregation= 'EU27_2020',
+    x_angle=  45,
+    dataNow=  Sys.time(),
+    author = 'A.Student',
+    outFile = 'Germany-up2-2016', 
+    outDir = "tt-fish",
+    indiName= 'emp_20_64_MS'
+)
+  
+```
+but it is very important to emphasize some constraints
+and unusual ways to pass parameters to such a function.
+In fact, note that the first argument is the working dataset
+which is passed not as an R object but as a string, the name
+of the dataset that must be available in the R workspace
+before invoking *go_ms_fish*.    
+The second argument *countryRef* is a string with the short name of
+a member country that will be shown in one-country plots.
+Less obvious, argument *indiType = "lowBest"* specifies if
+the considered indicator is built so that a low value is good for
+a country or if a high value is good (*indiType = "highBest"*).  
+
+Of particular importance the argument *outFile* that 
+can be a string indicating the name of the output file.
+Similarly *outDir* is the path (unit and folders) in which the
+final compiled html will be  stored. 
+The syntax of the path depend on the operating system;
+for example *outDir='F:/analysis/IT2018'*  indicates that
+in the usb disk called 'F', within the folder 'analysis'
+is located folder 'IT2018' where R will write the country fiche.
+Note that a disk called 'F' must exist and also folder 'analysis'
+must exist in such unit, while on the contrary folder 'IT2018'
+is created by the function if it does not already exist.
+
+Within the above mentioned output directory, besides the compiled html,
+it is also stored a file called like specified by  *outFile* 
+but with added the string '-workspace.RData'
+that contains data and plots produced 
+during the compilation of the country fiche for further
+subsequent use in other technical reports.
+
+
+
+
+
+# Indicator fiches
+
+
+An auxiliary function *go_indica_fish()*
+is provided in the  R package  *convergEU*
+to produce an indicator fiches, where the output is an html file.
+At this purpose, an output directory must be also specified.
+Note that some arguments are passed as strings instead of objects,
+as described in the last section above.   
+
+
+An example of syntax to invoke the procedure is:  
+
+```
+go_indica_fish(
+    time_0 = 2005,
+    time_t = 2010,
+    timeName = 'time',
+    workingDF = 'emp_20_64_MS' ,
+    indicaT = 'emp_20_64',
+    indiType = c('highBest','lowBest')[1],
+    seleMeasure = 'all',
+    seleAggre = 'EU27_2020',
+    x_angle =  45,
+    data_res_download =  FALSE,
+    auth = 'A.Student',
+    dataNow =  '2019/05/16',
+    outFile = "test_IT-emp_20_64_MS",
+    outDir = "tt-fish"
+  )
+```
+
+
+
+
+
+
+<br> 
+
+# References  
+
+The following reference may be consulted for details:    
+
+  * Brussels, 21.11.2018, COM(2018) 761 final,  DRAFT JOINT EMPLOYMENT REPORT FROM THE COMMISSION AND THE COUNCIL, accompanying the Communication from the Commission on the Annual Growth Survey 2019.     
+  
+  * Eurofound (2018), Upward convergence in the EU: Concepts, measurements and indicators, Publications Office of the European Union, Luxembourg; by: Massimiliano Mascherini, Martina Bisello, Hans Dubois and Franz Eiffe.    
+  
+  * Tuszynski, J. (2015). **caTools**: Tools: moving window statistics, GIF, Base64, ROC AUC, etc.
+R package version 1.17.1.2, URL https://CRAN.R-project.org/package=caTools.       
+
+  * Nedka D. Nikiforova, Federico M. Stefanini, Chiara Litardi, Eleonora Peruffo and Massimiliano Mascherini (2020) Tutorial: analysis of convergence with the convergEU package.
+  Package vignette
+  URL https://local.disia.unifi.it/stefanini/RESEARCH/coneu/tutorial-conv.html     
+  
+<br><br>  
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+# Appendix: clusters over time of EU MS
+
+
+In this appendix several  lists of member states are  defined
+as follows:
+```{r}
+setupConvergEU <- convergEU_glb()
+names(setupConvergEU)
+```
+and, with more details:
+```{r}
+print(setupConvergEU$EUcodes,n=30)
+print(setupConvergEU$Eurozone)
+setupConvergEU$EU12
+setupConvergEU$EU15
+```
+
+```{r}
+print(setupConvergEU$EU25$dates)
+print(setupConvergEU$EU25$memberStates,n=30)
+
+print(setupConvergEU$EU27$dates)
+print(setupConvergEU$EU27$memberStates,n=30)
+
+print(setupConvergEU$EU27_2020$dates)
+print(setupConvergEU$EU27_2020$memberStates,n=30)
+```
+
+
+
+
+

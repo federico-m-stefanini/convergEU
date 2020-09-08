@@ -1,0 +1,68 @@
+
+
+
+
+ 
+
+<br><br> 
+
+## Gamma convergence
+
+
+Gamma convergence captures the movements of the Member States in the country ranking in different points in time. If countries in the first rank fall behind or catch up over time, convergence occurs. Changes in outcomes have been calculated with the Kendall Index (KI). The index can assume values between 0 and 1, where a low value implies that a high number of changes have occurred over time. 
+<br>
+
+
+
+
+
+ 
+```{r,echo=FALSE}
+## already set at start
+resGamma <- gamma_conv(wkDF2, timeName = timeName, ref = ptime_0, last = ptime_t)
+#sigCores
+# here repeated in case just this measure is calculated
+resDelta <- delta_conv(wkDF2, timeName = timeName)
+
+lastRowAveragesGam <- nrow(resDelta$res)
+
+out_packed_list$gammaSummary <-  list(
+  indicatorType= params$indiType,
+  startingYear = ptime_0,
+  endingYear = ptime_t,
+  gammaConv= resGamma$res
+)
+```
+
+
+Gamma summary list:   
+
+
+  * Indicator type: `r params$indiType`    
+<br>  
+  * Change in average:    
+  
+      + Year `r ptime_0`, average:  `r as.numeric(outMed[1,aggregation])`   
+      + Year `r ptime_t`, average:  `r as.numeric(outMed[lastRowAverages,aggregation])`     
+      + Difference $\Delta$ between years: `r as.numeric(outMed[lastRowAverages,aggregation])-as.numeric(outMed[1,aggregation])`     
+<br>
+  * Gamma value:    
+      + Year `r ptime_0`: reference time   
+      + Year `r ptime_t`: last time 
+      + KI value: `r as.numeric(resGamma$res)`    
+      
+      
+**Note**: this measure should be complementary with the analysis of the others measures in order to check if the movements are towards an exemplary model. 
+
+      
+ 
+
+
+
+
+
+ 
+
+
+
+

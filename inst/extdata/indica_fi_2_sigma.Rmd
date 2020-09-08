@@ -1,0 +1,296 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+ 
+ 
+<br><br>   
+
+## Sigma convergence
+
+ 
+Sigma convergence is a reduction in disparities between Member States over time. 
+It can be investigated with the standard deviation or with the coefficient of variation.
+
+
+<br>
+
+```{r,echo = FALSE,eval=F}
+##
+## 2019-12-12 
+## Chunk moved on top of indica_fi_2.Rmd file to be sure it will be  
+## always  executed
+##
+
+##wkDF2 <- filter(wkDF, .data[[timeName]]   <= ptime_t & .data[[timeName]] >= ptime_0)
+sigCores <- sigma_conv(wkDF2, 
+                       timeName = timeName, 
+                       time_0 = ptime_0, 
+                       time_t = ptime_t)
+#sigCores
+lastRowAveragesSig <- nrow(sigCores$res)
+
+sd_enne <<- function(vec_obs){
+   enne <-  length(vec_obs)
+   esse_n <- sd(vec_obs)*sqrt((enne-1)/enne)
+   esse_n
+}
+CV_enne <<- function(vec_obs){
+   enne <-  length(vec_obs)
+   std_dev <- sd_enne(vec_obs) 
+   val_CV_n <- 100*std_dev /mean(vec_obs)
+   val_CV_n
+}
+dichia_con_stddev <- upDo_CoDi(wkDF2,
+          timeName = timeName,
+          indiType = params$indiType,
+          time_0 = ptime_0,
+          time_t = ptime_t,
+          heter_fun = "sd_enne"
+          )
+
+dichia_con_CV <- upDo_CoDi(wkDF2,
+          timeName = timeName,
+          indiType = params$indiType,
+          time_0 = ptime_0,
+          time_t = ptime_t,
+          heter_fun = "CV_enne"
+          )
+
+
+# here stddev
+if(dichia_con_stddev$res$declaration_strict != "none"){
+  label_dichia_con_stddev <- paste(
+       dichia_con_stddev$res$declaration_strict,
+       dichia_con_stddev$res$declaration_type
+       )
+}else{
+  label_dichia_con_stddev <- paste(
+               dichia_con_stddev$res$declaration_weak,
+               dichia_con_stddev$res$declaration_type
+               )
+}
+# now CV
+if(dichia_con_CV$res$declaration_strict != "none"){
+  label_dichia_con_CV <- paste(
+       dichia_con_CV$res$declaration_strict,
+       dichia_con_CV$res$declaration_type
+       )
+}else{
+  label_dichia_con_CV <- paste(
+               dichia_con_CV$res$declaration_weak,
+               dichia_con_CV$res$declaration_type
+               )
+}
+
+```
+
+#### Standard Deviation 
+
+Standard deviation allows for the comparison across time periods and is preferable if no comparison across indicators is needed because the measure of dispersion will not be affected by changes in its average. Sigma convergence exists if the overall change is negative.
+
+<br>
+<br>
+
+The key concept in sigma-convergence is variability  with respect to the mean.
+Let $Y_{m,i,t}$ be the value of indicator $i$ for member state $m$ at time $t$,
+ and $\overline{Y} _{A,i,t}$ the average over aggregation $A$, than:    
+
+  * the average is
+    $$\overline{Y}_{A,i,t} = n(A)^{-1}\sum_{m \in A} Y_{m,i,t}$$
+    
+    where $n(A)$ is the number of member states within aggregation $A$;       
+  * the standard deviation is
+    $$s_{A,i,t} = \sqrt{n(A)^{-1} \sum_{m \in A} (Y_{m,i,t} -\overline{Y}_{A,i,t})^2}$$
+    
+
+For each year, the above summaries are calculated to assess if a reduction in heterogeneity took place.
+
+<br><br>
+
+<br><br>
+    
+
+```{r,echo=FALSE,message=FALSE,error=FALSE}
+require(gridExtra)
+
+plot2sig <- qplot( sigCores$res$time,sigCores$res$stdDev,
+      xlab= paste("Years "),
+      ylab= paste("Standard Deviation (",aggregation,")")) +
+  geom_line()  +
+  ggplot2::scale_x_continuous(
+       breaks = seq(ptime_0,ptime_t),
+       labels = seq(ptime_0,ptime_t)) +
+  ggplot2::theme( 
+         axis.text.x=ggplot2::element_text(
+         angle = 45 ,
+         vjust = 1,
+         hjust=1))
+
+sigma_gr1 <-  grid.arrange(
+  plot2sig, ncol=1
+  )
+# export
+out_packed_list$sigma_gr1 <-  sigma_gr1
+
+invisible(sigma_gr1) 
+```
+
+<br>
+
+#### Coefficient of variation
+
+The coefficient of variation allows for the comparison across time 
+periods and since it is a scale invariant measure it allows the 
+comparison among different indicators. Sigma convergence 
+exists if the overall change is negative.
+
+<br>
+<br>
+
+The key concept in sigma-convergence is variability  with respect to the mean.
+Let $Y_{m,i,t}$ be the value of indicator $i$ for member state $m$ at time $t$,
+and
+$\overline{Y} _{A,i,t}$ the average over aggregation $A$,
+than:    
+
+  * the average is
+    $$\overline{Y}_{A,i,t} = n(A)^{-1}\sum_{m \in A} Y_{m,i,t}$$
+    
+    
+    where $n(A)$ is the number of member states within aggregation $A$;       
+
+  * the coefficient of variation is
+    $$CV(A,i,t) = 100 \cdot \frac{s_{A,i,t}}{\overline{Y}_{A,i,t}}$$
+    
+For each year, the above summaries are calculated to
+assess if a reduction in heterogeneity took place.
+
+<br><br>
+
+<br><br>
+
+
+```{r,echo=FALSE,message=FALSE,error=FALSE}
+plot3sig <- qplot( sigCores$res$time,sigCores$res$CV*100,
+      xlab= paste("Years "),
+      ylab= paste("Coefficient of variation (",aggregation,")")) +
+  geom_line()  +
+  ggplot2::scale_x_continuous(
+       breaks = seq(ptime_0,ptime_t),
+       labels = seq(ptime_0,ptime_t)) +
+  ggplot2::theme( 
+         axis.text.x=ggplot2::element_text(
+         #size = ggplot2::rel(myfont_scale ),
+         angle = 45 ,
+         vjust = 1,
+         hjust=1))
+
+sigma_gr2 <-  grid.arrange(
+  #plot1sig, plot3sig, ncol=2)
+  plot3sig, ncol=1)
+
+# export
+out_packed_list$sigma_gr2 <-  sigma_gr2
+
+invisible(sigma_gr2) 
+```
+
+
+
+
+
+
+<br>
+
+ 
+
+
+
+```{r,echo=FALSE,eval=FALSE}
+##
+## 2019-12-12
+## Chunk moved on top of the indica_fi_2.Rmd file to be sure it will be
+## alaways executed.
+
+
+# overall sigma convergence
+diffeSTDdev <- as.numeric(sigCores$res[lastRowAverages,'stdDev'])-as.numeric(sigCores$res[1,'stdDev'])
+diffeCV <- 100*(as.numeric(sigCores$res[lastRowAveragesSig,'CV'])-as.numeric(sigCores$res[1,'CV']))
+if(diffeSTDdev < 0){
+   label_sigmaSTDdev <- "convergence"
+}else if(diffeSTDdev == 0) {
+  label_sigmaSTDdev <- "unchanged"
+}else{
+  label_sigmaSTDdev <- "divergence"
+}
+if(diffeCV < 0){
+   label_sigmaCV <- "convergence"
+}else if(diffeCV == 0){
+  label_sigmaCV <- "unchanged"
+}else{
+  label_sigmaCV <- "divergence"
+}
+
+label_sigma_joint<- paste("Standard Deviation: ",label_sigmaSTDdev,"; CV: ",label_sigmaCV)
+
+```    
+
+     
+    
+    
+    
+Sigma summary list:   
+
+  * Indicator type: `r params$indiType`    
+<br>
+  * Change in average:    
+  
+      + Year `r ptime_0`, average:  `r as.numeric(outMed[1,aggregation])`   
+      + Year `r ptime_t`, average:  `r as.numeric(outMed[lastRowAverages,aggregation])`     
+      + Difference $\Delta$ between years: `r as.numeric(outMed[lastRowAverages,aggregation])-as.numeric(outMed[1,aggregation])`     
+<br>      
+  * Change in Standard Deviation:    
+  
+      + Year `r ptime_0`, standard deviation:  `r as.numeric(sigCores$res[1,'stdDev'])`   
+      + Year `r ptime_t`, standard deviation:  `r as.numeric(sigCores$res[lastRowAveragesSig,'stdDev'])`     
+      + Difference  between years: `r  diffeSTDdev`    
+      + Result: `r  label_sigmaSTDdev`       
+<br>      
+  * Change in Coefficient of Variation (CV):    
+  
+      + Year `r ptime_0`, CV:  `r 100*as.numeric(sigCores$res[1,'CV'])`   
+      + Year `r ptime_t`, CV:  `r 100*as.numeric(sigCores$res[lastRowAveragesSig,'CV'])`     
+      + Difference  between years: `r  diffeCV`      
+      + Result: `r label_sigmaCV`         
+<br>      
+  * Results for year `r ptime_t` with reference year `r ptime_0`:    
+  
+      + Standard Deviation: **`r label_dichia_con_stddev` **         
+      + Coefficient of Variation: **`r label_dichia_con_CV` **      
+      
+
+
+
+```{r,echo=FALSE}
+out_packed_list$sigmaSummary <-  list(
+  indicatorType= params$indiType,
+  #diagnosis= diagnosis,
+  startingYear = ptime_0,
+  endingYear = ptime_t,
+  startingAverage = as.numeric(outMed[1,aggregation]),
+  endingAverage = as.numeric(outMed[lastRowAverages,aggregation]),
+  DeltaAverage =  as.numeric(outMed[lastRowAverages,aggregation])-
+                   as.numeric(outMed[1,aggregation]),
+  #
+  startingStdDev = as.numeric(sigCores$res[1,'stdDev']),
+  endingStdDev = as.numeric(sigCores$res[lastRowAveragesSig,'stdDev']),
+  DeltaStdDev = as.numeric(sigCores$res[lastRowAverages,'stdDev'])-as.numeric(sigCores$res[1,'stdDev']),
+  #
+  startingCV = 100*as.numeric(sigCores$res[1,'CV']),
+  endingCV = 100*as.numeric(sigCores$res[lastRowAveragesSig,'CV']),
+  DeltaCV = 100*(as.numeric(sigCores$res[lastRowAveragesSig,'CV'])-as.numeric(sigCores$res[1,'CV']))
+)
+
+```

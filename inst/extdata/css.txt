@@ -1,0 +1,38 @@
+<style>
+.vertical-text {
+	display: inline-block;
+	overflow: hidden;
+	width: 1.3em;
+}
+.vertical-text__inner {
+	display: inline-block;
+	white-space: nowrap;
+	line-height: 1.5;
+	transform: translate(0,100%) rotate(-90deg);
+	transform-origin: 0 0;
+}
+
+.vertical-text__inner:after {
+	content: "";
+	display: block;
+	margin: -1.5em 0 100%;
+}
+
+
+body {
+	font: 11px/1 Arial, sans-serif;
+}
+
+table {
+	margin-top: 1em;
+}
+th,td {
+	border: 1px solid;
+	text-align:center;
+	font-weight: normal;
+	padding: 0.5em;
+}
+head{
+   color: blue;
+}
+</style>

@@ -1,0 +1,17 @@
+
+
+
+
+<br><br>
+ 
+###  Beta convergence
+ 
+The calculation of beta convergence was not performed due to the presence of negative values.  
+ 
+<br>
+ 
+ 
+
+
+
+

@@ -1,0 +1,534 @@
+---
+title: "Eurostat data"
+author: "F.M. Stefanini"
+date: "26 aprile 2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,eval=FALSE)
+require(convergEU)
+```
+ 
+ 
+ 
+# How to download and filter Eurostat  data 
+ 
+ 
+ 
+The heterogeneity in the structure of different indicators
+requires some cares.
+A list of covariates   for each indicator is sometimes present
+besides age and  gender thus their values must be set
+to produce a tidy dataset time by countries.
+ 
+First, raw data may be downloaded using the option  rawDump=T:
+```{r,echo=TRUE,eval=TRUE}
+download_indicator_EUS(
+      indicator_code= convergEU_glb()$metaEUStat$selectorUser[1],
+      fromTime = 2005,
+      toTime = 2015,
+      gender= c(NA,"T","F","M")[1],#c("Total","Females","Males")
+      countries =  convergEU_glb()$EU28$memberStates$codeMS,
+      rawDump=T )
+```
+which is not a tidy dataset.
+Note that *unit*   and   *isced11*  are auxilary valiables
+specific for this indicator that must be set to obtain a tidy dataset
+years by countries.  
+
+
+At this purpose,  the argument  rawDump=F indicates
+that bulk data are to be filtered and reshaped, as follows:
+```{r,echo=TRUE,eval=TRUE}
+myEUSdat <- download_indicator_EUS(
+      indicator_code= convergEU_glb()$metaEUStat$selectorUser[1],
+      fromTime = 2005,
+      toTime = 2015,
+      gender= c(NA,"T","F","M")[1],#c("Total","Females","Males")
+      ageInterv = NA,
+      countries =  convergEU_glb()$EU28$memberStates$codeMS,
+      rawDump=F,
+      uniqueIdentif = 1)
+myEUSdat
+```
+where *convergEU\_glb()\$EU28\$memberStates\$codeMS*
+is a vector of strings for the considered countries,
+*convergEU\_glb()\$metaEUStat\$selectorUser[1]*
+contains the name of the indicator and where
+*ageInterv* may take a value when an age interval may be specified
+for a given indicator. 
+The result is list with the following components:    
+  
+  * \$res contains the selected data as a tidy tibble (dataset);     
+  * \$msg\$gender is a component describing results; \$msg\$gender states
+    that gender was not selected thus it was automatically set;   
+  * \$msg\$Age states that age class was automatically set;     
+  * \$msg\$Further\_Conditioning contains further variables to set in order
+    to obtain a tidy dataset; in particular 
+    \$msg\$Further\_Conditioning\$current states the value of conditioning
+    specific  variables taken from the list of possible ones
+    \$msg\$Further\_Conditioning\$available\_seleTagLs;    
+  * \$msg\$Conditioning contains common conditiongn variables, such as ageInterv
+    and gender.
+
+It is therefore possible to call several time the same function and
+specify the argument uniqueIdentif as an integer among thos in the first column
+left of \$msg\$Further_Conditioning\$available\_seleTagLs  to obtain the same
+indicator under differt scales and contexts.
+For example the fifth conditioning context is for males in age interval 
+"Y15-64" is:
+```{r,echo=T,eval=TRUE}
+myEUSdat <- download_indicator_EUS(
+      indicator_code= convergEU_glb()$metaEUStat$selectorUser[1],
+      fromTime = 2005,
+      toTime = 2015,
+      gender= "M",
+      ageInterv = "Y15-64",
+      countries =  convergEU_glb()$EU28$memberStates$codeMS,
+      rawDump=F,
+      uniqueIdentif = 5)
+myEUSdat
+```
+
+
+
+
+
+# Overview of a selected collection of Eurostat variables
+
+In this section an example is provided for every indicator
+within  the selected collection *convergEU\_glb()\$metaEUStat\$selectorUser*.
+Note that in some cases a Country may have all values missing.
+
+```{r,eval=TRUE}
+#eleDBvars <-  list()
+for(indicaName in convergEU_glb()$metaEUStat$selectorUser){
+  cat("---------------------------------------\n")
+  cat("\n---------------------------------------\n\nIndicator:\n",indicaName,"\n")
+    scaricati <- download_indicator_EUS(
+      indicator_code=indicaName, # metaEUStat$selectorUser
+      fromTime = 2005,
+      toTime = 2015,
+      gender= c(NA,"T","F","M")[1],
+      ageInterv = NA,
+      countries =  convergEU_glb()$EU28$memberStates$codeMS,
+      rawDump=F,
+      uniqueIdentif = 1)
+
+    #eleDBvars[[indicaName]]<- names(scaricati)
+  print(scaricati)  
+  }
+
+```
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+<!--  
+buffer of previous tests  below   
+--> 
+
+
+
+
+ 
+```{r}
+# raw download
+names(convergEU_glb())
+names( convergEU_glb()$metaEUStat )
+convergEU_glb()$metaEUStat$subSelection
+convergEU_glb()$metaEUStat$selectorUser
+
+ttmp2 <- download_indicator_EUS(
+  indicator_code="labourcost_i", # metaEUStat$selectorUser
+  fromTime = 2005,
+  toTime = 2015,
+  gender= c(NA,"T","F","M")[1],#c("Total","Females","Males")
+  ageInterv = NA,
+  countries =  convergEU_glb()$EU28$memberStates$codeMS,
+  rawDump=T)
+
+#nomi variabili di classificazione
+nomiCriteria<-list() 
+for(vaName in convergEU_glb()$metaEUStat$selectorUser){
+  cat("\n\n----------------------------------------------------")
+  cat(vaName,"\n\n")
+  downTB <- download_indicator_EUS(
+            indicator_code=vaName, # metaEUStat$selectorUser
+            fromTime = 2005,
+            toTime = 2015,
+            gender= c(NA,"T","F","M")[1],#c("Total","Females","Males")
+            ageInterv = NA,
+            countries =  convergEU_glb()$EU28$memberStates$codeMS,
+            rawDump=T)
+  print(head(downTB))
+  nomiCriteria[[vaName]] <- names(downTB)
+}
+length(nomiCriteria)
+
+# estraggo quelli ovvi e noti: sex,geo,age,time,values
+nomiCriteriaMin <- lapply(nomiCriteria,function(vx){
+  setdiff(vx,c("sex","geo","age","time","values"))
+})
+
+## ora il cartesiano degli attributi popolati 
+
+selezionaSubset <- function(vaName,nomiCriteriaMin){
+  downTB <- download_indicator_EUS(
+            indicator_code=vaName, # metaEUStat$selectorUser
+            fromTime = 2005,
+            toTime = 2015,
+            gender= c(NA,"T","F","M")[1],#c("Total","Females","Males")
+            ageInterv = NA,
+            countries =  convergEU_glb()$EU28$memberStates$codeMS,
+            rawDump=T)
+  estraCarte <- nomiCriteriaMin[[vaName]]
+  puntiCampionari <- lapply(estraCarte,function(vx){
+        as.character(unlist(unique(downTB[,vx])))
+  })
+  cartesiano <- expand.grid(puntiCampionari)
+  names(cartesiano)<-estraCarte
+  cartesianoNum<- mutate(cartesiano,conta=NA)
+  for(righeDB in 1:nrow(cartesiano)){
+    contatore<- rep(TRUE,nrow(downTB))
+    for(aux in estraCarte){
+      contatore <- contatore & 
+        (unlist(downTB[,aux]) ==  as.character(cartesiano[righeDB,aux])) 
+    }
+    cartesianoNum$conta[righeDB]<- sum(contatore)
+  }
+  # select if greater than zero
+  estrattore <- which(cartesianoNum$conta >0)
+  cartesianoNum<- cartesianoNum[estrattore,]
+  list(paste("\n------------------\nSummary for variable:  ",
+     vaName,"\n",
+     "Please pick one of the following rows:\n",sep=""),
+  cartesianoNum) 
+}
+## testa
+# debug(selezionaSubset)
+# resFF <- selezionaSubset("lfsa_argaed",nomiCriteriaMin)
+# resFF <- selezionaSubset(convergEU_glb()$metaEUStat$selectorUser[20],nomiCriteriaMin)
+# cat(resFF [[1]])
+# resFF[[2]] 
+```
+ 
+ 
+ 
+ 
+```{r,eval=F}
+resAll<- list()
+punta<- 19
+for(indicaName in convergEU_glb()$metaEUStat$selectorUser){
+  punta<- punta +1
+  print(punta)
+   resAll[[indicaName]] <- selezionaSubset(indicaName,nomiCriteriaMin)
+   #cat(resAll [[1]])
+   #print(resAll[[2]] )
+  }
+ 
+for(indicaName in convergEU_glb()$metaEUStat$selectorUser){
+    cat(resAll [[1]])
+    print(resAll[[2]] )
+  }
+```
+ 
+ 
+ 
+ 
+```{r}
+# solo elem3enti singoli
+selezionaSubsetSingoli <- function(vaName,nomiCriteriaMin){
+  downTB <- download_indicator_EUS(
+            indicator_code=vaName, # metaEUStat$selectorUser
+            fromTime = 2005,
+            toTime = 2015,
+            gender= c(NA,"T","F","M")[1],#c("Total","Females","Males")
+            ageInterv = NA,
+            countries =  convergEU_glb()$EU28$memberStates$codeMS,
+            rawDump=T)
+  estraCarte <- nomiCriteriaMin[[vaName]]
+  puntiCampionari <- lapply(estraCarte,function(vx){
+        as.character(unlist(unique(downTB[,vx])))
+  })
+  names(puntiCampionari) <-  estraCarte
+  
+  # select if greater than zero
+  list(paste("\n------------------\nSummary for variable:  ",
+     vaName,"\n",
+     "Please pick one of the following items for each list component (variable):\n",sep=""),
+  puntiCampionari) 
+}
+
+
+
+bigSTRres<- " "
+for(indicaName in convergEU_glb()$metaEUStat$selectorUser){
+  resAll <-  selezionaSubsetSingoli(indicaName,nomiCriteriaMin) 
+  if(length(resAll[[2]])>0){
+    bigSTRres1<- paste(resAll[[1]], "\n")
+    bigSTRres <- paste(bigSTRres,bigSTRres1) 
+    for(aux in 1:length(resAll[[2]])){
+      bigSTRres2<- paste("\n",names(resAll[[2]])[aux],":\n  ",
+      paste(resAll[[2]][[aux]],collapse="; "),"\n\n")
+      bigSTRres <- paste(bigSTRres,bigSTRres2) 
+     }
+    }
+  }
+
+cat(bigSTRres,file="/media/fred/STORE/PRJ/2018-TENDER-EU/STEP-1/bitbucketed/convergEU/inst/EUstat_download/toRevise.txt")
+
+```
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<!-- 
+ 
+```{r}
+# library(convergEU)
+undebug(download_indicator_EUS)
+debug(download_indicator_EUS)
+
+names(convergEU_glb())
+names( convergEU_glb()$metaEUStat )
+convergEU_glb()$metaEUStat$subSelection
+convergEU_glb()$metaEUStat$selectorUser
+
+get_eurostat(id="labourcost_i")
+search_eurostat("labourcost", fixed=T)
+
+tmp <- search_eurostat("Labour cost",fixed=TRUE)
+tmp
+tmp <- search_eurostat("cost",fixed=TRUE)
+tmp
+
+
+
+
+#
+ttmp <- download_indicator_EUS(
+  indicator_code="hlth_dm060", # metaEUStat$selectorUser
+  fromTime = 2005,
+  toTime = 2015,
+  gender= c(NA,"T","F","M")[2],#c("Total","Females","Males")
+  ageInterv = "Y16-64",
+  countries =  convergEU_glb()$EU28$memberStates$codeMS)
+#
+
+
+names(convergEU_glb())
+####namesInDBEUF <- convergEU_glb()$metaEUStat$Code_in_database
+
+# namesInDBEUS <- convergEU_glb()$metaEUStat$Official_code
+metaEUStat <- convergEU_glb()$metaEUStat
+#metaEUStat <- mutate(metaEUStat,Official_code_purified = Official_code)
+metaEUStat$Official_code_purified <- c("lfsa_argaed", "lfsa_ergaed",
+                                       "lfsa_ergacob", "lfsa_urgan",
+                                       "une_educ_a", "lfsa_upgan", "edat_lfse_20", "une_rt_a", "ilc_lvhl36",
+                                       "ilc_lvhl30", "lfsa_egad", "lfsa_eppgai",
+                                       "lfsi_emp_a",
+                                       "lfsi_pt_a",
+                                       "lfsa_egised",
+                                       "earn_gr_gpgr2",
+                                       "lfsa_esgan", "lfsa_esgan",
+                                       "lfsa_etgar", "prc_ppp_ind", "gov_10dd_edpt1", "nasa_10_ki",
+                                       "gov_10a_main", "nama_10_lp_ulc", "nama_10_lp_ulc", "nama_10_lp_ulc",
+                                       "earn_nt_net", "spr_exp_sum", "gov_10a_exp", "ilc_pnp3", "spr_exp_pens",
+                                       "spr_pns_ben", "edat_lfse_14", "trng_lfse_01", "edat_lfse_03",
+                                       "gov_10a_exp", "hlth_silc_08", "gov_10a_exp",
+
+                                       "isoc_sk_dskl_i",
+
+                                       "isoc_bde15b_h", "isoc_ci_im_i", "isoc_ec_ibuy", "isoc_ci_it_en2",
+                                       "rd_p_perslf", "rd_e_gerdtot", "isoc_ciegi_ac", "gov_10a_exp",
+
+                                       "lfsa_eegan2",
+                                       "prc_hicp_aind",
+
+                                       "ilc_di12", # missing
+
+                                       "ilc_di11", "lfst_r_lmder", "demo_mlexpec", "hlth_hlye",
+                                       "y16_deprindex",
+                                       "hlth_dm060")
+
+
+namesInDBEUS <- metaEUStat$Official_code_purified
+
+library(eurostat)
+
+toc <-  get_eurostat_toc()
+outS <-  search_eurostat("Deprivation")
+outS[,1:2]
+# myES <- get_eurostat(outS[1,2], type = "label", time_format = "num")
+# save(myES,file="myES.RData")
+# load(file="myES.RData")
+# levels(myES$na_item)
+# levels(myES$geo)
+ageEUS <- list()
+sexEUS <- list()
+geoEUS <- list()
+timeEUS <- list()
+for(aux in namesInDBEUS[- c(
+  which("y16_deprindex" == namesInDBEUS),
+  which("ilc_di12" == namesInDBEUS)
+)]
+){
+  myES2 <- get_eurostat(aux,  time_format = "num")
+  print(myES2)
+  ageEUS[[aux]] <-  unique(myES2$age)
+  sexEUS[[aux]] <-  unique(myES2$sex)
+  geoEUS[[aux]] <-  unique(unlist(myES2$geo))
+  timeEUS[[aux]] <-  c(min(myES2$time),max(myES2$time))
+  #clean_eurostat_cache()
+}
+# clean_eurostat_cache()
+myES2lab <-label_eurostat(myES2)
+#unique(myES2lab$)
+unique(myES2lab$sector)
+unique(myES2lab$cofog99)
+unique(myES2lab$na_item)
+unique(myES2lab$)
+```{r,eval=FALSE}
+names(convergEU_glb())
+####namesInDBEUF <- convergEU_glb()$metaEUStat$Code_in_database
+
+# namesInDBEUS <- convergEU_glb()$metaEUStat$Official_code
+metaEUStat <- convergEU_glb()$metaEUStat
+namesInDBEUS <- metaEUStat$Official_code_purified
+
+
+
+
+
+
+
+
+
+
+
+library(eurostat)
+
+toc <-  get_eurostat_toc()
+outS <-  search_eurostat("Deprivation Index")
+outS[,1:2]
+
+ageEUS <-  list()
+sexEUS <-  list()
+geoEUS <-  list()
+timeEUS <- list()
+for(aux in namesInDBEUS[- c(
+  which("y16_deprindex" == namesInDBEUS),
+  which("ilc_di12" == namesInDBEUS)]
+){
+  myES2 <- get_eurostat(aux,  time_format = "num")
+  print(myES2)
+  ageEUS[[aux]] <-  unique(myES2$age)
+  sexEUS[[aux]] <-  unique(myES2$sex)
+  geoEUS[[aux]] <-  unique(unlist(myES2$geo))
+  timeEUS[[aux]] <-  c(min(myES2$time),max(myES2$time))
+  #clean_eurostat_cache()
+}
+# clean_eurostat_cache()
+myES2lab <-label_eurostat(myES2)
+#unique(myES2lab$)
+unique(myES2lab$sector)
+unique(myES2lab$cofog99)
+unique(myES2lab$na_item)
+unique(myES2lab$)
+
+estrattore <- which(convergEU_glb()$metaEUStat$Official_code_purified == "gov_10a_exp"  )
+convergEU_glb()$metaEUStat[estrattore,]
+## diverse vars dentro un dataset
+# 1 gov_10a_exp   expspr_p         General government expenditure in social protect 
+# 2 gov_10a_exp   expedu_p         General government expenditure in education as p 
+# 3 gov_10a_exp   exphlth_p        General government expenditure in health as perc 
+# 4 gov_10a_exp   exppubserv_p
+
+estrattore <- which(convergEU_glb()$metaEUStat$Official_code_purified == "lfsa_esgan"  )
+convergEU_glb()$metaEUStat[estrattore,]
+#   Official_code     Code_in_database indicator     Official_code_pu  subSelection
+#   <chr>             <chr>            <chr>         <chr>             <chr>
+# 1 Own calculation.  selfemp_p        Self employm  lfsa_esgan        NA
+# 2 Own calculation.  selfempwe_p      Self employm  lfsa_esgan        NA
+
+estrattore <- which(convergEU_glb()$metaEUStat$Official_code_purified == "nama_10_lp_ulc"  )
+convergEU_glb()$metaEUStat$Code_in_database[estrattore]
+#   Official_code  Code_in_database indicator         Official_code_p  subSelection
+#   <chr>          <chr>            <chr>             <chr>            <chr>
+# 1 nama_10_lp_ulc labourcost_i     Nominal unit lab  nama_10_lp_ulc   NA
+# 2 nama_10_lp_ulc labourprod_i     Real labour prod  nama_10_lp_ulc   NA
+# 3 nama_10_lp_ulc compemp_pps      Compensation per  nama_10_lp_ulc   NA
+
+unique(myES2$age)
+unique(myES2$time)
+unique(myES2$sex)
+unique(myES2$isced11)
+
+
+## eccezioni
+ttmp <- NULL
+try(ttmp <- invisible(get_eurostat("scaramacao",  time_format = "num")))
+warnings()
+error()
+
+tryCatch(
+  #ttmp <- invisible(get_eurostat("scaramacao",  time_format = "num")),
+  ttmp <- (get_eurostat("scaramacao",  time_format = "num")),
+  error = function(ee){list(res=NULL,
+                            err="Error: download failed.",
+                            msg= ttmp)},
+  warning = function(ww){print(ww)},
+  message = function(mm){print(mm)}
+)
+
+purrr::possibly(get_eurostat, NA, quiet = TRUE)("scaramacao",  time_format = "num")
+
+purrr::possibly(get_eurostat, NA, quiet = FALSE)("ilc_di12",  time_format = "num")
+
+
+
+mytmp <- utils::capture.output(
+  tttmp <- purrr::possibly(get_eurostat, NA, quiet = FALSE)("scaramacao",
+                                                            time_format = "num"), type="message")
+
+
+mytmp <- utils::capture.output(
+  tttmp <- purrr::possibly(get_eurostat, NA, quiet = FALSE)("ilc_di12",
+                                                            time_format = "num"), type="message")
+
+
+```
+
+--> 
+ 
+ 

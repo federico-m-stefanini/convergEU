@@ -1,0 +1,1233 @@
+---
+output: 
+  html_document:
+    css: EUF.css
+params:
+      dataNow: "3/03/2020"
+      workingDF: NA
+      time_0: NA
+      time_t: NA
+      timeName: NA
+      indiType: 'highBest'
+      indicaT: NA
+      seleMeasure: NA
+      seleAggre: NA
+      x_angle: NA
+      data_res_download: FALSE
+      auth: 'Eurofound'
+      outFile: NA
+      outDir: NA
+      pdf_out: FALSE
+      workTB: !r iris
+---
+ 
+
+```{r setup, include=FALSE,eval=TRUE}
+
+library(convergEU)
+library(knitr)
+library(tibble)
+library(devtools)
+library(tidyverse)
+library(eurostat)
+library(purrr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(kableExtra)
+library(caTools)
+library(broom)
+library(gridExtra)
+ 
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  prompt= TRUE,
+  fig.width = 7,
+  fig.height = 5,
+  echo=FALSE,
+  message = FALSE,
+  warning = FALSE,
+  eval=TRUE
+)
+```
+
+
+ 
+
+
+```{r chunk1,eval=F}
+
+# input parameters
+params <- list()
+params$dataNow <- Sys.Date()
+params$time_0 <- 2005
+params$time_t <- 2010
+params$timeName  <- 'time'
+params$workingDF  <- 'emp_20_64_MS'
+params$indicaT <- 'emp_20_64_MS'
+params$indiType<- 'lowBest' # highBest
+params$seleMeasure <- 'all'
+params$seleAggre <- 'custom' ##'EU12'
+params$x_angle<- 45
+params$data_res_download <- TRUE
+params$auth <- 'A.P.Student'
+params$outFile <- "test_indica-fi-cust"
+#params$outDir <-
+params$outDir <-   "../tt-fish"
+params$pdf_out <- TRUE
+params$workTB <- iris
+```
+
+
+
+
+<br>
+<!-- center -->
+<img src="eurofound.jpg" width=248px height=163px>
+<!-- /center -->
+<br><br>
+
+<!--
+<style  type="text/css">
+body {
+  font-size: 38px;
+}
+</style
+-->
+
+
+# Indicator  Fiche     
+
+This fiche shows the investigation of upward convergence of Member States in the selected indicator using the methodological framework of Eurofound (2018). Where upward convergence is the process in which Member States improve their performance in relation to a particular outcome or policy objective together with a decrease in disparities among them. From a methodological point of view, there is no single measure capable of capturing all the relevant aspects of the convergence, it is therefore essential to consider more than one measure in order to obtain a more comprehensive idea of the convergence dynamics.
+
+<br>
+
+### Fiche info 
+
+   
+Today: `r params$dataNow`     
+R Package: <a href='https://cran.r-project.org/package=convergEU'> **convergEU** </a>  
+Indicator: *`r params$indicaT`*  
+Indicator type: *`r params$indiType`*  
+Measures of convergence: *`r if(is.null(params$seleMeasure)){"none"}else{params$seleMeasure}`*   
+Aggregation: *`r params$seleAggre`*    
+Time window: *`r  params$timeName`*  from *`r as.numeric(params$time_0)`*  to *`r as.numeric(params$time_t)`*  
+Author: *`r params$auth`* 
+
+   
+   
+    
+
+```{r chunk2,echo=F,eval=T}
+# to save into a out-file
+out_packed_list <- list()
+out_packed_list$params <- params
+
+timeName <- params$timeName
+myx_angle <-  params$x_angle
+ptime_0 <-  as.numeric(params$time_0)
+ptime_t <-  as.numeric(params$time_t)
+indiName <- indicaT <- params$indicaT
+indiType <- params$indiType
+
+#otherCountries
+aggregation <- params$seleAggre 
+
+out_packed_name <- file.path(params$outDir,
+                             paste0(params$outFile,
+                                    '-workspace.RData'))
+
+ 
+wkDF <- params$workTB
+ 
+# wkDF
+# filtering
+wkDF1 <- dplyr::filter(wkDF, .data[[timeName]]   <= ptime_t & .data[[timeName]] >= ptime_0)
+
+
+## select variables-countries according to aggregation
+if( !(params$seleAggre %in% 
+      c(convergEU_glb()$labels_clusters ,"custom"))){
+  stop("Error: wrong aggregation selected!!\nLook into convergEU_glb()");
+}; 
+
+if(params$seleAggre != "custom"){
+    nomiSele <- c(params$timeName,
+               convergEU_glb()[[params$seleAggre]]$memberStates$codeMS)
+    wkDF2 <-  wkDF1[, nomiSele]
+    # only countries
+    sele_soli_ms <- convergEU_glb()[[params$seleAggre]]$memberStates$codeMS
+
+}else{
+   # this is for "custom" selection
+   nomiSele <- names(wkDF1)
+   wkDF2 <-  wkDF1
+   # only countries
+   sele_soli_ms <- setdiff(names(wkDF2),timeName)
+}
+
+
+tempo_val <- unlist(wkDF2[,sele_soli_ms])
+tempo_val <- tempo_val[tempo_val > 0]
+minim_not_null <- min(tempo_val)/100
+if(all(wkDF2[,sele_soli_ms] >= 0)){
+      for(auxvv in sele_soli_ms){
+         estrattore_nulli <- wkDF2[[auxvv]] == 0
+         wkDF2[[auxvv]][estrattore_nulli] <- minim_not_null
+      }
+}
+
+## selection of measures
+allMeasures <- c( "beta","delta","gamma","sigma", "all")
+semaforo <- list()
+if(length(setdiff(params$seleMeasure, allMeasures)) > 0 ){
+  stop("Errore: wrong measures selected!!")
+}else{
+    for(auxSemaforo in allMeasures[-5]){semaforo[[auxSemaforo]]<- FALSE};
+    if("all" %in% params$seleMeasure){
+       for(auxSemaforo in allMeasures[-5])semaforo[[auxSemaforo]]<- TRUE;
+    }else{  
+       for(auxSemaforo in params$seleMeasure)semaforo[[auxSemaforo]]<- TRUE;
+    }  
+}
+
+# averaging conditional to aggregation
+if(params$seleAggre != "custom"){
+outMed <- average_clust(wkDF2, timeName = params$timeName, 
+                        cluster = aggregation)$res[,c(timeName,aggregation)]
+}else{
+  outMed <- average_clust(wkDF2, timeName = params$timeName, 
+                          cluster = "all")$res[,c(timeName,"all")]
+  
+  vars2rename <- c(custom="all")
+  outMed <- dplyr::rename(outMed, custom = all)
+}
+
+
+
+
+
+## 2019-12-12 moved here
+lastRowAverages <- nrow(outMed)
+```
+  
+  
+  
+```{r chunk3,eval=FALSE}
+print(out_packed_name)
+```
+
+
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+```{r sigmaconvCalculations,echo = FALSE}
+##
+##
+## Sigma convergence calculated always whether printed or not
+## 2019-12-12
+##
+
+
+sigCores <- sigma_conv(wkDF2, timeName = timeName, time_0 = ptime_0, time_t=ptime_t)
+#sigCores
+lastRowAveragesSig <- nrow(sigCores$res)
+
+sd_enne <<- function(vec_obs){
+   enne <-  length(vec_obs)
+   esse_n <- sd(vec_obs)*sqrt((enne-1)/enne)
+   esse_n
+}
+CV_enne <<- function(vec_obs){
+   enne <-  length(vec_obs)
+   std_dev <- sd_enne(vec_obs) 
+   val_CV_n <- 100*std_dev /mean(vec_obs)
+   val_CV_n
+}
+dichia_con_stddev <- upDo_CoDi(wkDF2,
+          timeName = timeName,
+          indiType = params$indiType,
+          time_0 = ptime_0,
+          time_t = ptime_t,
+          heter_fun = "sd_enne"
+          )
+
+dichia_con_CV <- upDo_CoDi(wkDF2,
+          timeName = timeName,
+          indiType = params$indiType,
+          time_0 = ptime_0,
+          time_t = ptime_t,
+          heter_fun = "CV_enne"
+          )
+
+
+# here stddev
+if(dichia_con_stddev$res$declaration_strict != "none"){
+  label_dichia_con_stddev <- paste(
+       dichia_con_stddev$res$declaration_strict,
+       dichia_con_stddev$res$declaration_type
+       )
+}else{
+  label_dichia_con_stddev <- paste(
+               dichia_con_stddev$res$declaration_weak,
+               dichia_con_stddev$res$declaration_type
+               )
+}
+# now CV
+if(dichia_con_CV$res$declaration_strict != "none"){
+  label_dichia_con_CV <- paste(
+       dichia_con_CV$res$declaration_strict,
+       dichia_con_CV$res$declaration_type
+       )
+}else{
+  label_dichia_con_CV <- paste(
+               dichia_con_CV$res$declaration_weak,
+               dichia_con_CV$res$declaration_type
+               )
+}
+
+```
+
+
+
+
+```{r overallSigmaConvergence,echo=FALSE}
+# overall sigma convergence
+diffeSTDdev <- as.numeric(sigCores$res[lastRowAverages,'stdDev'])-as.numeric(sigCores$res[1,'stdDev'])
+diffeCV <- 100*(as.numeric(sigCores$res[lastRowAveragesSig,'CV'])-as.numeric(sigCores$res[1,'CV']))
+if(diffeSTDdev < 0){
+   label_sigmaSTDdev <- "convergence"
+}else if(diffeSTDdev == 0) {
+  label_sigmaSTDdev <- "unchanged"
+}else{
+  label_sigmaSTDdev <- "divergence"
+}
+if(diffeCV < 0){
+   label_sigmaCV <- "convergence"
+}else if(diffeCV == 0){
+  label_sigmaCV <- "unchanged"
+}else{
+  label_sigmaCV <- "divergence"
+}
+
+label_sigma_joint<- paste("Standard Deviation: ",label_sigmaSTDdev,"; CV: ",label_sigmaCV)
+
+```    
+
+  
+
+
+
+
+ 
+ 
+ 
+ 
+<br><br>
+
+###  Time series overview of EU countries
+
+The graph shows the times series trend of each Member State giving an idea of the development of the countries across time. 
+
+<br>
+
+ 
+```{r}
+colMS <- setdiff(names(wkDF2),timeName)
+
+wkDF3 <-  wkDF2  %>% tidyr::gather_( gather_cols = colMS, 
+                            key_col = "Country",value_col="Indicator" )
+    
+
+mGallEU <- ggplot2::ggplot(wkDF3,aes(x = time, y= Indicator, 
+                                      group=Country
+                                     )) +
+           ggplot2::geom_line( aes(color=Country)) +
+           ggplot2::scale_x_continuous(
+               breaks = seq(ptime_0,ptime_t),
+               labels = seq(ptime_0,ptime_t)) +
+          ggplot2::theme( 
+                   axis.text.x=ggplot2::element_text(
+                   angle = 45 ,
+                   vjust = 1,
+                   hjust=1)) +
+         ggplot2::ylab(indicaT) 
+
+out_packed_list$allEUms <-  list()
+out_packed_list$allEUms$mGallEU <- mGallEU
+
+mGallEU
+```
+ 
+ 
+ 
+ 
+
+<br><br>
+
+###  Time series summary of EU countries 
+
+ The graph gives an overview of the development in some basic descriptive statistics: unweighted average, median, the minimum and the maximum value in each year.
+
+<br>
+ 
+```{r}
+colMS <- setdiff(names(wkDF2),timeName)
+
+enneC <- nrow(wkDF2)
+riaSD <- apply(wkDF2[,colMS],1,function(vx)sqrt(var(vx)*(enneC-1)/enneC))
+sintesiTB <- wkDF2[,timeName]
+sintesiTB <- sintesiTB %>% 
+    dplyr::mutate(min =apply(wkDF2[,colMS],1,min))%>%
+    dplyr::mutate(max = apply(wkDF2[,colMS],1,max))%>%
+    dplyr::mutate(mean = apply(wkDF2[,colMS],1,mean))%>%
+    dplyr::mutate(median = apply(wkDF2[,colMS],1,median))%>%
+    dplyr::mutate(mean_mSD =mean-riaSD)%>%
+    dplyr::mutate(mean_pSD =mean+riaSD)
+  
+  
+riaFlat<-  sintesiTB  %>% tidyr::gather_( 
+                gather_cols = c("min", "mean_mSD", "mean", "median",
+                                "mean_pSD","max"), 
+                key_col = "Stat",
+                value_col="Value" )
+riaFlat$Stat <- factor(riaFlat$Stat,
+                       levels= c("min", "mean_mSD", "mean", "median",
+                                "mean_pSD","max"))
+myStyle <-  c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
+myColors <- c("black","black","white","red","blue","blue")
+riaFlat <- dplyr::mutate(riaFlat,LineType = 0)    
+riaFlat$LineType[riaFlat$Stat == "median"] <- 3    
+riaFlat$LineType[riaFlat$Stat == "mean"] <- 1
+riaFlat$LineType[riaFlat$Stat == "median"] <- 2     
+riaFlat$LineType[riaFlat$Stat == "mean_mSD"] <- 4     
+riaFlat$LineType[riaFlat$Stat == "mean_pSD"] <- 4    
+riaFlat$LineType[riaFlat$Stat == "min"] <- 5     
+riaFlat$LineType[riaFlat$Stat == "max"] <- 5     
+riaFlat<- mutate(riaFlat,Grp= as.numeric(factor(Stat)))
+# for legend
+riaFlat <- dplyr::mutate(riaFlat,mylty=myStyle[riaFlat$LineType])
+riaFlat <- dplyr::mutate(riaFlat,Statistic=as.character(riaFlat$Stat))
+
+
+myLabels <- c("max", "mean","mean_mSD","mean_pSD","median","min")
+# build labels for minimum and maximum
+
+sintesiTB$eticheMin <- sapply(seq(1,length(sintesiTB$min)),
+      function(vx){
+      estrattore <- sintesiTB$min[vx] == wkDF2[vx,colMS]
+      #print(sum(estrattore))
+      paste(colMS[estrattore],collapse="/")
+})
+sintesiTB$eticheMax <- sapply(seq(1,length(sintesiTB$max)),
+      function(vx){
+      estrattore <- sintesiTB$max[vx] == wkDF2[vx,colMS]
+      #print(sum(estrattore))
+      paste(colMS[estrattore],collapse="/")
+}) 
+
+
+
+mGallSummary <- ggplot2::ggplot(riaFlat,aes(x = time,y= Value)) +
+  ggplot2::geom_line( aes( colour=Stat ),linetype=riaFlat$mylty) +
+  ggplot2::geom_point( aes( colour=Stat)) +
+  scale_colour_manual("Statistic",values=c(min="blue",
+                               mean_mSD="red",
+                               mean="black",
+                               median="black",
+                               mean_pSD = "red",
+                               max="blue")
+                      ,labels=c(min="min",
+                               mean_mSD="mean-1*std.dev.",
+                               mean="mean",
+                               median="median",
+                               mean_pSD = "mean+1*std.dev.",
+                               max="max")
+                      ) +
+  guides(shape = FALSE, colour = guide_legend(
+           override.aes = list(linetype =  c("min"="82",
+                                        "mean_mSD"="3313",
+                                        "mean"="F1",
+                                        "median"="66",
+                                        "mean_pSD" = "3313",
+                                        "max"="82")
+           ))) + theme(legend.key.size = unit(1.3, "cm"))  +
+  ggplot2::scale_x_continuous(
+    breaks = seq(ptime_0,ptime_t),
+    labels = seq(ptime_0,ptime_t)) +
+  ggplot2::theme(
+    axis.text.x=ggplot2::element_text(
+      angle = 45 ,
+      vjust = 1,
+      hjust=1)) +
+  ggplot2::ylab(indicaT) +
+  # labels on min and max
+  ggplot2::annotate("text",
+                    x =sintesiTB[[timeName]] ,
+                    y=sintesiTB$max ,
+                    label = paste(sintesiTB$eticheMax,"    "),
+                    color ="navyblue",
+                    angle=45) +
+  ggplot2::annotate("text",
+                    x =sintesiTB[[timeName]] ,
+                    y=sintesiTB$min ,
+                    label = paste("    ",sintesiTB$eticheMin),
+                    color ="navyblue",
+                    angle=45)
+
+
+
+out_packed_list$allEUms$mGallSummary <-  mGallSummary
+
+mGallSummary
+```
+
+
+<br> 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<br><br>
+
+###  Boxplots of EU countries over time
+
+The graph gives an overall idea of the dispersion and some descriptive statistics of the Member States in each year. 
+
+ 
+```{r}
+wkDF3 <- tidyr::gather_(wkDF2,  gather_cols = colMS, 
+                            key_col = "Country",value_col="Indicator" )
+    
+wkDF3$time <-  factor(wkDF3$time)
+condiBP <-   qplot(time,Indicator,data=wkDF3,geom="boxplot",
+                  group= time) +
+          geom_point(position=position_jitter(width=0.1),
+                     colour=alpha("red",0.25)) +
+          ggplot2::theme( 
+                   axis.text.x=ggplot2::element_text(
+                   angle = 45 ,
+                   vjust = 1,
+                   hjust=1)) +
+         ggplot2::ylab(indicaT)
+
+
+
+
+  
+out_packed_list$condiBP <-  condiBP
+
+condiBP
+```
+ 
+
+Legend:    
+
+  *  boxes height: first and third quartile (hinges)  
+  *  bold black horizontal segment: median
+  *  upper whisker: $min(max(x), Q_3 + 1.5 * IQR)$  
+  *  lower whisker: $max(min(x), Q_1 - 1.5 * IQR)$  
+  
+where $IQR = Q_3 - Q_1$ is the box length, that is the third quartile
+minus the first quartile. Overlaid  jittered points are shown in red.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<br><br>
+
+###  Unweighted average by year over selected countries
+
+The graph presents the unweighted average calculated on the aggregation of Member States selected. Below the graph there are initial and final year values and the overall change in the period.
+The overall change can be upward or downward depending on the objective direction of the indicator and its interpretation.
+
+<br>
+
+```{r,echo=FALSE}
+
+cluster_mean_gr2 <- qplot(
+      unlist(outMed[,timeName]),
+      unlist(outMed[,aggregation]),
+      xlab= paste("Years "),
+      ylab= paste("Average (",aggregation,")")) +
+  geom_line()  +
+  ggplot2::scale_x_continuous(
+       breaks = seq(ptime_0,ptime_t),
+       labels = seq(ptime_0,ptime_t)) +
+  ggplot2::theme( 
+         axis.text.x=ggplot2::element_text(
+         angle = 45 ,
+         vjust = 1,
+         hjust=1))
+  
+
+# export
+out_packed_list$cluster_mean_gr2 <-  cluster_mean_gr2
+#plot
+cluster_mean_gr2
+```
+ 
+```{r,echo=FALSE}
+
+diffeAve <- as.numeric(outMed[lastRowAverages,aggregation]) - 
+            as.numeric(outMed[1,aggregation])
+## highBest
+if( (diffeAve > 0 )  &  (params$indiType =="highBest")){
+  labelAveDelta <-  "upward change"
+}else if((diffeAve == 0)  &  (params$indiType =="highBest")){
+  labelAveDelta <- "unchanged"
+}else if((diffeAve < 0)  &  (params$indiType =="highBest")) {
+  labelAveDelta <- "downward change"
+}
+## lowBest
+if( (diffeAve > 0 )  &  (params$indiType =="lowBest")){
+  labelAveDelta <-  "downward change"
+}else if((diffeAve == 0)  &  (params$indiType =="lowBest")){
+  labelAveDelta <- "unchanged"
+}else if((diffeAve < 0)  &  (params$indiType =="lowBest")) {
+  labelAveDelta <- "upward change"
+}
+
+```
+
+
+
+  * Change in average:    
+  
+      + Year `r ptime_0`, average:  `r as.numeric(outMed[1,aggregation])`   
+      + Year `r ptime_t`, average:  `r as.numeric(outMed[lastRowAverages,aggregation])`         
+      + Difference $\Delta$ between years: `r  diffeAve`    
+   <br> 
+  * Overall result (interpretation): **`r   labelAveDelta`**      
+ <br>    
+  * Member states with increment of mean in year `r ptime_t` with respect  to year   `r ptime_0`:   
+  
+      + `r  paste(sort(dichia_con_stddev$res$declaration_split$names_incre),collapse="; ")`   
+      
+  * Member states with decrement of means in year `r ptime_t` with respect  to year   `r ptime_0`:    
+  
+      + `r  paste(sort(dichia_con_stddev$res$declaration_split$names_decre),collapse="; ")`   
+
+
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+```{r,echo=FALSE,eval=TRUE}
+# Pre-processing for beta convergence when null or negative values 
+#     are present 
+
+wkDF2bis <- dplyr::filter(wkDF2, .data[[timeName]] == ptime_0 | 
+                                 .data[[timeName]] == ptime_t)[sele_soli_ms];  
+             
+
+semaforo[["nega_val_indi"]] <- FALSE
+#nega_val <- any(wkDF2[, sele_soli_ms] < 0)# check too many values instead of ptime_t & ptime_0
+nega_val <- any(wkDF2bis < 0)
+
+if(nega_val & semaforo[["beta"]] ){
+  semaforo[["nega_val_indi"]] <- TRUE
+  semaforo[["beta"]] <- FALSE
+}
+ 
+```  
+
+```{r,echo=FALSE,eval=FALSE}
+semaforo
+```
+ 
+  
+
+```{r,echo=FALSE,results='asis'}
+if(semaforo[["nega_val_indi"]]){
+  cat(knitr::asis_output(knitr::knit_child("indica_fi_2_nobeta.Rmd", 
+                                           quiet=TRUE, envir=environment())))
+}
+```
+
+```{r,echo=FALSE,results='asis'}
+if(semaforo[["beta"]]){
+  cat(knitr::asis_output(knitr::knit_child("indica_fi_2_beta.Rmd", 
+                                           quiet=TRUE, envir=environment())))
+}
+```
+
+ 
+
+          
+
+            
+
+
+
+        
+
+```{r,echo=FALSE,results='asis',eval=TRUE}
+if(semaforo[["sigma"]]){
+  cat(knitr::asis_output(knitr::knit_child("indica_fi_2_sigma.Rmd", 
+                                           quiet=TRUE, envir=environment())))
+}
+```
+            
+            
+ 
+
+
+```{r,echo=FALSE,results='asis',eval=TRUE}
+if(semaforo[["delta"]]){
+  cat(knitr::asis_output(knitr::knit_child("indica_fi_2_delta.Rmd", 
+                                           quiet=TRUE, envir=environment())))
+}
+```
+    
+
+
+ 
+
+
+
+
+
+```{r,echo=FALSE,results='asis',eval=TRUE}
+if(semaforo[["gamma"]]){
+  cat(knitr::asis_output(knitr::knit_child("indica_fi_2_gamma.Rmd", 
+                                           quiet=TRUE, envir=environment())))
+}
+```
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br> 
+
+## Member States dynamics
+
+
+The dynamics of Member States show the differences in the situation of single
+ Member States which can be hidden under the use of a single indicator.
+Understanding the dynamics is also necessary to better identify possible drivers
+ of convergence and divergence as well as structural deficiencies or sustainable
+ recoveries.
+
+<br><br> 
+
+
+
+
+
+####  Alert indicator
+
+
+This graph is useful in order to assess if the Member State's performance
+ deviates significantly from the average and it has been created building on
+ the EMCO and SPC methodology. The performance of each country is standardised
+ each year and then the scores are compared according to their standard deviation. 
+
+
+
+```{r,echo=FALSE}
+#altezzIG0 <- 3+7*(length(sele_soli_ms)/30)
+
+obe_lvl <- scoreb_yrs(wkDF2,timeName = timeName)$res$sco_level_num
+#curCountries <- names(obe_lvl)[-1]
+curCountries <- setdiff(names(obe_lvl),timeName)
+altezzIG00 <- 3+7*(length(curCountries)/30)
+```
+
+```{r,echo=FALSE,fig.width=8,fig.height=altezzIG00}
+
+scobe_lvl <- scoreb_yrs(wkDF2,timeName = timeName)$res$sco_level
+# select subset of time
+estrattore <- scobe_lvl[[timeName]] >= ptime_0  & scobe_lvl[[timeName]] <= ptime_t  
+scobelvl <- scobe_lvl[estrattore,]
+# conversion
+curCountries <- setdiff(names(scobelvl),timeName)
+
+for(aux in curCountries){
+  scobelvl[,aux] <- c(-1,-0.5,0,0.5,1)[unlist(scobelvl[,aux])]
+}
+final_TB <- tidyr::gather(scobelvl, key="Country",value="Level",all_of(curCountries))
+```
+
+
+
+
+```{r,echo=FALSE,fig.width=8,fig.height=altezzIG00}
+numberofOutColumns <-  6
+myG_JAF <- ggplot(final_TB,aes(x = unlist(final_TB[,timeName]),
+                    y = Level)) +
+  ggplot2::facet_wrap(~ Country,ncol=numberofOutColumns)+
+  ggplot2::geom_line() + 
+  ggplot2::geom_point() +
+  ggplot2::theme(
+         axis.text.x=ggplot2::element_text(
+         angle = 90 
+         )) +
+   ggplot2::scale_x_continuous(
+     breaks = unlist(final_TB[,timeName]),
+     labels = unlist(final_TB[,timeName]))  +
+   ggplot2::scale_y_continuous(
+     breaks =  c(-1,-0.5,0,0.5,1),
+     labels = c(-1,-0.5,0,0.5,1), 
+     limits= c( -1.25,1.25) )  +
+  xlab("Years") +ylab("Indicator") +
+geom_hline(yintercept=-1,colour="red",linetype="dotted")+
+geom_hline(yintercept=-0.5,colour="red",linetype="dotted")+
+geom_hline(yintercept=0,colour="red",linetype="dotted")+
+geom_hline(yintercept=0.5,colour="red",linetype="dotted")+
+geom_hline(yintercept= 1,colour="red",linetype="dotted")
+ 
+
+out_packed_list$JAF <- myG_JAF 
+myG_JAF
+```
+
+
+
+<br><br>
+
+
+#### Dynamics  
+
+
+
+This table is useful in order to assess if the Member State's performance deviates significantly from the average.
+
+```{r,echo=FALSE}
+#altezzIG0 <- 3+7*(length(sele_soli_ms)/30)
+
+
+obe_lvl <- scoreb_yrs(wkDF2,timeName = timeName)$res$sco_level_num
+#curCountries <- names(obe_lvl)[-1]
+curCountries <- setdiff(names(obe_lvl),timeName)
+altezzIG0 <- 3+7*(length(curCountries)/30)
+```
+
+
+
+```{r,echo=FALSE,fig.width=8,fig.height=altezzIG0}
+# select subset of time
+estrattore <- obe_lvl[[timeName]] >= ptime_0  & obe_lvl[[timeName]] <= ptime_t  
+scobelvl <- obe_lvl[estrattore,c(timeName,curCountries)]
+
+my_MS <- ms_dynam( scobelvl,
+                timeName = "time",
+                displace = 0.25,
+                displaceh = 0.5,
+                dimeFontNum = 4,
+                myfont_scale = 1.35,
+                x_angle = 90,
+                axis_name_y = "Countries",
+                axis_name_x = "Time",
+                alpha_color = 0.9,
+                indiType = params$indiType
+                )
+  
+out_packed_list$MSdyn <- my_MS
+my_MS
+```
+
+
+
+
+  
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+<br><br>
+
+#### Convergence and divergence patterns 
+
+
+
+The table represents the 20 convergence patterns of the 'aggregation' countries
+ in the chosen timeframe. The values in the table refer to the patterns shown in the
+ graphical legend below.
+
+
+
+ 
+
+<style>
+.vertical-text {
+	display: inline-block;
+	overflow: hidden;
+	width: 1.3em;
+}
+.vertical-text__inner {
+	display: inline-block;
+	white-space: nowrap;
+	line-height: 1.5;
+	transform: translate(0,100%) rotate(-90deg);
+	transform-origin: 0 0;
+}
+/* This element stretches the parent to be square
+   by using the mechanics of vertical margins  */
+.vertical-text__inner:after {
+	content: "";
+	display: block;
+	margin: -1.5em 0 100%;
+}
+
+
+body {
+	font: 11px/1 Arial, sans-serif;
+}
+
+table {
+	margin-top: 1em;
+}
+th,td {
+	border: 1px solid;
+	text-align:center;
+	font-weight: normal;
+	padding: 0.5em;
+}
+head{
+   color: blue;
+}
+</style>
+
+ 
+ 
+
+```{r, echo=FALSE}
+
+testa_1 <- function(colonne_tot){
+paste(  
+"<table class=\"table table-striped table-condensed table-bordered\" style=\"font-size: 12px; width: auto !important; margin-center: auto; margin-right: auto;\"><thead>
+<tr>
+<th style=\"border-bottom:hidden\" colspan=\"1\"></th><th style=\"border-bottom:hidden; padding-bottom:0; padding-center:3px;padding-right:3px;text-align: center; color: #2676ba;\" colspan=\"",
+colonne_tot-4,
+"\"><div style=\"border-bottom: 1px solid #ddd; padding-bottom: 5px; \"><span style=\"-webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); display: inline-block;\">Yearly changes</span></div></th>
+<th style=\"border-bottom:hidden; padding-bottom:0; padding-center:3px;padding-right:3px;text-align: center; color: #2676ba;\" colspan=\"3\"><div style=\"border-bottom: 1px solid #ddd; padding-bottom: 5px; \"><span style=\"-webkit-transform: rotate(0deg); -moz-transform: rotate(0deg); -ms-transform: rotate(0deg); -o-transform: rotate(0deg); transform: rotate(0deg); display: inline-block;\">Instances of convergence and divergence</span></div>
+</th>
+<th style=\"border-bottom:hidden\" colspan=\"1\"></th>
+</tr>",  sep="")
+  
+}
+
+
+testa_2bis <- function(etichetteH, etich_col_1r="First/Last"){
+
+res <- "<tr><th style=\"text-align:left;\"> <div   style=\"color:#2676ba;\">Country</div> </th>";
+for(aux in etichetteH){
+  res <- paste(res,"<th style=\"text-align:center;\"><div class=\"vertical-text\">",
+             "<div class=\"vertical-text__inner\" style=\"color:#2676ba;\">",
+               aux,"</div></div> </th>", sep="",collapse="\n");
+}  
+res <- paste(res,  "<th style=\"text-align:center;\"> <div style=\"color:#2676ba;\">")  
+res <- paste(res, "Catching up<br>(1) </div> </th> <th style=\"text-align:center;\"> ")
+res <- paste(res,"<div style=\"color:#2676ba;\"> Falling away <br>(9) </div> </th>")
+res <- paste(res, "<th style=\"text-align:center;\">  <div style=\"color:#2676ba;\">Diving  <br>(6)</div> </th>")
+res <- paste(res,"<th style=\"text-align:center;\"><div class=\"vertical-text\">",
+             "<div class=\"vertical-text__inner\" style=\"color:#2676ba;\">",
+               etich_col_1r,"</div></div> </th>", 
+         "</tr></thead>",sep=" ",collapse=" ") 
+res  
+}
+ 
+corpo_1 <-  function(record){ # tutta la riga anche con colonna extra
+  dime <- length(record)-1
+  # filtro record for colouring the background
+  templato <- list()
+  templato[1:21] <- "<td style=\"text-align:center;\">";
+  
+  # end of changes
+  templato[[1]] <- "<td style=\"text-align:center;background-color: #dbe7c2\">";
+  templato[[6]] <- "<td style=\"text-align:center;background-color: #f9b9b9\">";
+  templato[[9]] <- "<td style=\"text-align:center;background-color: #ee3557\">";
+
+  elem_good <- as.numeric(record[-1*c(1,dime-2,dime-1,dime,dime+1)])
+  res <- paste(
+  "<tr>",
+   "<td style=\"text-align:left;\">", record[1],"</td>",
+  paste(templato[elem_good],
+        elem_good,"</td>",sep="",collapse=""),
+   "<td style=\"text-align:center;\">",
+         "<span  >",record[dime-2],"</span></td>",
+  "<td style=\"text-align:center;\">",
+            "<span  >",record[dime-1],"</span></td>",
+  "<td style=\"text-align:center;\">", 
+             "<span  >",record[dime],"</span></td>",
+
+  templato[[as.numeric(record[dime+1])]],
+             "<span  >",record[dime+1],"</span></td>",
+  "</tr>",sep="")
+  
+  res
+}
+
+corpo_full <-  function(myTB){
+  
+  dimeR <- nrow(myTB)
+  res<-"<tbody>"
+  for(aux in 1:dimeR){
+    recordcorre <-  corpo_1( unlist(myTB[aux,]))
+    res <- paste(res,recordcorre,
+                 sep="")
+  } 
+  paste(res,
+        "</tbody>","</table>",sep="")
+}
+
+tabe_tot <- function(mydata, first_last_years="First/Last"){
+  totcol <- ncol(mydata)-1
+  intesta <- names(mydata)[-c(1,totcol-2,totcol-1,totcol,totcol+1)]
+  res <-  testa_1(totcol)
+  res <- paste(res, testa_2bis(etichetteH = intesta, 
+                               etich_col_1r = first_last_years ),
+               sep="")
+  res <- paste(res, corpo_full(mydata),sep="")
+  res
+}
+
+
+```
+
+ 
+ 
+ 
+```{r,results='asis',eval=T}
+estrattore <- as.logical((wkDF2[,timeName] >= ptime_0) &  (wkDF2[,timeName]<= ptime_t))
+
+myMSPat <- ms_pattern_ori(wkDF2[estrattore,],
+                          timeName = timeName,
+                          typeIn= params$indiType)
+estrattore_1_n <- as.logical((wkDF2[,timeName] == ptime_0) |   
+                               (wkDF2[,timeName]== ptime_t))
+myMSPat_first_last <- ms_pattern_ori(wkDF2[estrattore_1_n ,],
+                          timeName = timeName,
+                          typeIn= params$indiType)
+
+workMatSco <- myMSPat$res$mat_num_tags
+workMatSco2 <- dplyr::bind_cols(myMSPat$res$mat_num_tags,
+                            myMSPat_first_last$res$mat_num_tags[,2] )
+# test
+if(any(myMSPat$res$mat_num_tags[,1] != myMSPat_first_last$res$mat_num_tags[,1])){
+  stop("Error: line 1020 indica_fi.Rmd - countries do not match.")
+}
+
+
+curCountries <- setdiff(names(wkDF2),timeName)
+posiMS <- posiMS2 <- vector()
+for(auxCC in curCountries){
+    posiMS <-  c(posiMS,which(workMatSco$Country == auxCC))
+    posiMS2 <-  c(posiMS2,which(workMatSco2$Country == auxCC))
+    
+}  
+workMatSco <- workMatSco[posiMS,]
+workMatSco2 <- workMatSco2[posiMS2,]
+  
+
+if(aggregation != "custom"){
+  map2str <- convergEU_glb()[[aggregation]]$memberStates
+}else{ # it's custom 3 october 2019
+  map2str <- dplyr::tibble(MS = curCountries,
+                           codeMS = curCountries)
+}
+
+
+
+## below is fine
+for(aux in 1:nrow(workMatSco)){ 
+    puntaMS <- which(map2str$codeMS ==   workMatSco$Country[aux ])
+    workMatSco$Country[aux ] <- map2str$MS[puntaMS]
+    puntaMS2 <- which(map2str$codeMS ==   workMatSco2$Country[aux ])
+    workMatSco2$Country[aux ] <- map2str$MS[puntaMS]
+    
+}
+
+
+tabeHTMLfinal <- tabe_tot(workMatSco2, 
+                          first_last_years = paste(ptime_0,"/", ptime_t,sep=""))# "First/Last")
+
+out_packed_list$patterns <- list(css="<style>\n.vertical-text {\n\tdisplay: inline-block;\n\toverflow: hidden;\n\twidth: 1.3em;\n}\n.vertical-text__inner {\n\tdisplay: inline-block;\n\twhite-space: nowrap;\n\tline-height: 1.5;\n\ttransform: translate(0,100%) rotate(-90deg);\n\ttransform-origin: 0 0;\n}\n\n.vertical-text__inner:after {\n\tcontent: \"\";\n\tdisplay: block;\n\tmargin: -1.5em 0 100%;\n}\n\n\nbody {\n\tfont: 11px/1 Arial, sans-serif;\n}\n\ntable {\n\tmargin-top: 1em;\n}\nth,td {\n\tborder: 1px solid;\n\ttext-align:center;\n\tfont-weight: normal;\n\tpadding: 0.5em;\n}\nhead{\n   color: blue;\n}\n</style>",
+     html=tabeHTMLfinal)
+
+cat(tabeHTMLfinal)
+```
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+<br>
+
+ 
+
+```{r,echo=FALSE,fig.width=8,fig.height=8} 
+
+
+if(params$indiType == "highBest"){
+    refGGpat <- patt_legend(indiType = "highBest")
+} else{  
+    refGGpat <- patt_legend(indiType = "lowBest")
+}
+
+grid.arrange(  refGGpat,
+               nrow = 1, ncol=1,
+      top= paste0("Patterns legend"),
+      bottom = "Time",
+      left= "Indicator value")
+  
+
+  
+  
+out_packed_list$gridLegend <- refGGpat
+ 
+```  
+
+
+**Note:** 21 is none of the previous patterns and requires visual inspection.
+<br>
+ 
+Legend:    
+
+* dashed blue lines: Member States
+* solid lines: EU average
+* Indicator type: `r params$indiType` 
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+<br><br>
+
+### Total decrease and increase in the gap with the `r params$aggregation` mean  
+
+The graph shows the sum of the yearly deviations from European average in each country.
+
+
+```{r,echo=FALSE}
+
+altezzIG000 <- 3+6*(length(curCountries)/30)
+```
+
+```{r,echo=FALSE,eval=F,fig.width=8,fig.height=altezzIG000}
+# already set
+# curCountries 
+res_dev_pt <- dev_mean_plot(wkDF2,
+                          timeName = timeName,
+                          time_0 = ptime_0,
+                          time_t = ptime_t,
+                          indiType = params$indiType,
+                          countries = curCountries,  
+                          displace = 0.15,
+                          axis_name_y = "Countries",
+                          val_alpha  = 0.95,
+                          debug=FALSE) 
+
+out_packed_list$Tot_inc_dec <- res_dev_pt$res
+res_dev_pt$res
+```
+
+
+
+```{r demeaGraph,echo=FALSE,eval=T,fig.width=8,fig.height=altezzIG000}
+
+res_dev_pt  <- demea_change(wkDF2,
+                      timeName=timeName,
+                      time_0 = ptime_0,
+                      time_t = ptime_t,
+                      sele_countries= curCountries,
+                      doplot=TRUE)
+
+
+out_packed_list$Tot_inc_dec <- res_dev_pt$res
+plot(res_dev_pt$res$res_graph)
+```
+
+
+
+<br><br><br>
+<hr>
+<br>
+Last `r date()`
+<br>
+
+
+
+```{r,echo=FALSE,eval=T}
+save(out_packed_list,file = out_packed_name)
+```
+
+
+
+
+

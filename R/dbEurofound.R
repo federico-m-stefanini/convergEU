@@ -1,0 +1,54 @@
+#' Eurofound dataset
+#'
+#' Source data provided by Eurofound currently up to 2018.
+#' Variable names often end with characters denoting scales.
+#' The following convention holds for names of variables:
+#' "_p"	percentage, "_i" index, "_pop" persons, "_h" hours,
+#' "_eur" euros, "_pps"	purchasing power standards,
+#' "_y"	years.
+#'
+#' Further details and metainformation on these data are contained into
+#' the dataset *dbEUF2018meta*, say *data(dbEUF2018meta)* in R.
+#'
+#' @source \url{https://www.eurofound.europa.eu/surveys/about-eurofound-surveys/data-availability#datasets}
+#' @docType data
+#' @keywords datasets
+#' @name dbEurofound
+#' @usage data(dbEurofound)
+#' @format A tibble dataset  with 17 columns
+#' \describe{
+#' \item{time}{ time }
+#' \item{geo}{ geo }
+#' \item{geo_label}{ geo_label }
+#' \item{sex}{ gender }
+#' \item{lifesatisf}{ Mean_life_satisfaction }
+#' \item{health}{ Mean_health_status }
+#' \item{goodhealth_p}{ Percentage_of_people_with_good_or_very_good_health }
+#' \item{trustlocal}{ Mean_level_of_trust_in_local_government }
+#' \item{volunt}{ Level_of_involvement_in_volunteering }
+#' \item{volunt_p}{ Percentage_of_people_involved_in_volunteering }
+#' \item{caring_h}{ Hours_per_week_spent_in_informal_care }
+#' \item{socialexc_i}{ Social_Exclusion_Index }
+#' \item{JQIskill_i}{ JQI_Skills_and_discretion_index }
+#' \item{JQIenviron_i}{ JQI_Physical_environment_index }
+#' \item{JQIintensity_i}{ JQI_Intensity_index }
+#' \item{JQItime_i}{ JQI_Working_time_quality_index }
+#' \item{exposdiscr_p}{ Exposition_to_discrimination }
+#' }
+#'
+#' @references{\url{https://local.disia.unifi.it/stefanini/RESEARCH/coneu/tutorial-conv.html}}
+#'
+#'@examples
+#' data("dbEurofound")
+#' head(dbEurofound)
+#'
+#' # Variable names:
+#' names(dbEurofound)
+#'
+#' # time ranges interval:
+#' c(min(dbEurofound$time), max(dbEurofound$time))
+#'
+#'
+NULL
+
+

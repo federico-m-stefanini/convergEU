@@ -1,0 +1,37 @@
+td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+}
+
+body {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 16px;
+   max-width: 1200px;
+   margin: auto;
+   padding: 1em;
+   line-height: 24px;
+}
+
+.section {
+   font-size: 16px;
+   line-height: 24px;
+
+}
+
+@media print{
+
+  img {
+    page-break-before: always; /* 'auxto', 'avoid,' 'left,' 'inherit,' or 'right' */
+    page-break-after: auto; /* 'always,' 'avoid,' 'left,' 'inherit,' or 'right' */
+    page-break-inside: avoid; /* or 'auto' */
+    }
+
+   table {
+      page-break-inside: avoid;
+
+   }
+
+
+}

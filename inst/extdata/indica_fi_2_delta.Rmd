@@ -1,0 +1,125 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+<br><br> 
+
+
+## Delta convergence 
+
+
+Delta convergence is a reduction of a country distance from the best performing Member State. There is convergence if there is a decrease in the period considered. 
+
+<br><br> 
+Let $y_{m,i,t}$ be the value of indicator $i$ for member state $m$ at time $t$,
+and $y^{(M)}_{i,t}$ the maximum value  over member states in the 
+reference set $A$:
+$$
+y^{(M)}_{i,t} = max(\{ y_{m,i,t}: m \in A\})
+$$
+
+The distance of a member state $m$ from the top performer at time $i$ is:
+$$
+y^{(M)}_{i,t} - y_{m,i,t}
+$$
+thus the overall distance at time $t$, called delta, is the sum of distances over the 
+reference set  $A$ of MS:
+$$
+\delta_{i,t} = \sum_{m \in A} (y^{(M)}_{i,t} -  y_{m,i,t})
+$$
+for the considered indicator $i$.
+
+For each year, the above summaries are calculated to assess if a reduction in 
+the amplitude on the took place.
+<br> <br>
+
+```{r,echo = FALSE}
+## already set at start
+resDelta <-   delta_conv(wkDF2,
+                         timeName = timeName,
+                         indiType = params$indiType,# "highBest","lowBest", #params$indiType
+                         time_0 = NA,
+                         time_t = NA,
+                         extended = TRUE) 
+
+
+lastRowAveragesDel <- nrow(resDelta$res$delta_conv)
+ 
+plot2de <- qplot( resDelta$res$delta_conv$time, resDelta$res$delta_conv$delta,
+      xlab= paste("Years "),
+      ylab= paste("Delta  (",aggregation,")")) +
+  geom_line()  +
+  ggplot2::scale_x_continuous(
+       breaks = seq(ptime_0,ptime_t),
+       labels = seq(ptime_0,ptime_t)) +
+  ggplot2::theme( 
+         axis.text.x=ggplot2::element_text(
+         angle = 45,
+         vjust = 1,
+         hjust = 1))
+
+delta_gr1 <-  grid.arrange(
+                    plot2de, ncol=1)
+# export
+out_packed_list$delta_gr1 <-  delta_gr1
+
+invisible(delta_gr1) 
+
+```
+
+
+  
+<br>
+
+
+Delta summary list:   
+
+
+  * Indicator type: `r params$indiType`    
+<br>  
+  * Change in average:    
+  
+      + Year `r ptime_0`, average:  `r as.numeric(outMed[1,aggregation])`   
+      + Year `r ptime_t`, average:  `r as.numeric(outMed[lastRowAverages,aggregation])`     
+      + Difference $\Delta$ between years: `r as.numeric(outMed[lastRowAverages,aggregation])-as.numeric(outMed[1,aggregation])`     
+<br>
+  * Change in delta values:    
+  
+      + Year `r ptime_0`, delta:  `r as.numeric(resDelta$res$delta_conv[1,'delta'])`   
+      + Year `r ptime_t`, delta:  `r as.numeric(resDelta$res$delta_conv[lastRowAveragesDel,'delta'])`     
+      + Difference  between years: `r resDelta$res$diffe_delta`    
+      +  **Overall: `r resDelta$res$label_strict`  `r resDelta$res$label_conver`** 
+  
+             
+      
+ 
+ 
+ 
+ 
+```{r,echo=FALSE,eval=semaforo[['delta']]}
+
+out_packed_list$deltaSummary <-  list(
+  indicatorType= params$indiType,
+  startingYear = ptime_0,
+  endingYear = ptime_t,
+  startingAverage = as.numeric(outMed[1,aggregation]),
+  endingAverage = as.numeric(outMed[lastRowAverages,aggregation]),
+  DeltaAverage =  as.numeric(outMed[lastRowAverages,aggregation])-
+                   as.numeric(outMed[1,aggregation]),
+  #
+  delta_conv_output= resDelta$res
+
+  )
+```
+
+
+ 
+
+
+
+

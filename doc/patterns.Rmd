@@ -1,0 +1,368 @@
+---
+title: "<hr align='left'
+ style='width:700px;height:4px;border:none;color:#333;background-color:#333;'>
+ <img   src='logoConvergEU5.png'  width=666 height=261><hr align='left' 
+  style='width:700px;height:4px;border:none;color:#333;background-color:#333;'>  
+  <br><br>Patterns of convergence and divergence in EU countries<br>"
+author: "<br>Federico M. Stefanini"
+date: "`r Sys.Date()` -  rel 1.2.0 <br>"
+output:   
+  rmarkdown::html_vignette:
+    fig_caption: yes
+    toc: false
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Measuring-convergence}
+  %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options:
+  chunk_output_type: console
+---
+  
+ 
+```{r setup, include = FALSE}
+require(ggplot2)
+require(dplyr)
+require(tidyverse)
+require(convergEU)
+require(eurostat)
+require(purrr)
+require(tibble)
+require(tidyr)
+require(ggplot2)
+require(knitr)
+#library(rvest)
+require(eurostat)
+require(formattable)
+require(kableExtra)
+
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+
+```
+
+
+<!--
+`fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+ {r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+
+-->
+ 
+
+<br><br>
+
+Some notation is required to dercribe qualitative patterns of change along time
+for indicators in EU.
+
+The following random variables are defined:        
+
+  * $Y_{EU,i,t}$ is the random variable for EU average,
+    indicator $i$ at time $t \in T_{EU,i}$;   
+  * $Y_{m,i,t}$ is the random variable for indicator $i$ of member state
+    $m$ at time $t \in T_{m,i}$;   
+  * observed value are $y_{EU,i,t}$ and $y_{m,i,t}$, with $m=1,...,28$.
+
+
+Let's assume that we have just two subsequent time points, 
+$$T_{EU,i} = T_{m,i} = \{2003,2004\}
+$$
+with the observed values 
+$y_{EU,i,2003}, y_{EU,i,2004}$,    
+$y_{m,i,2003}, y_{m,i,2004}$.
+
+
+From the Eurofound report (2018),
+the gradient is numerically calculated as follows:     
+  
+  * Member State (MS)
+    $$\beta_{m} := \nabla f_{MS}(y) = \frac{y_{m,i,t+\delta} -y_{m,i,t}}{\delta}$$     
+  
+  * EU average (EU)   
+    $$\beta_{EU} := \nabla \mu_{EU}(y) = \frac{y_{EU,i,t+\delta} -y_{EU,i,t}}{\delta}$$     
+    
+while the value of delta is:
+$$
+\Delta_{t+\delta,t} \sigma^2 :=  (y_{m,i,t+\delta} - y_{EU,i,t+\delta})^2 - 
+                       (y_{m,i,t} - y_{EU,i,t})^2
+$$
+with $\delta = 1$.    
+     
+     
+The value of the above three quantities and the relationship between betas
+determine the qualitative pattern in subsequent years (pp. 25 and 26
+of the above mentioned Eurofound report, modified in the table below).
+In the following table, on the right, a numerical code is shown
+for each considered condition, on the left:     
+
+  *    $(\beta_{EU} > 0) \wedge (\beta_{EU}< \beta_{m}) \wedge (\beta_{m}>0) \wedge (\Delta_{t+\delta,t} \sigma^2 < 0  ) \Longrightarrow  1$    
+  *    $(\beta_{EU} > 0) \wedge (\beta_{EU}> \beta_{m}) \wedge (\beta_{m}>0) \wedge (\Delta_{t+\delta,t} \sigma^2 <0  ) \Longrightarrow  2$  
+  *    $(\beta_{EU} > 0) \wedge (\beta_{EU}> \beta_{m}) \wedge (\beta_{m}<0) \wedge (\Delta_{t+\delta,t} \sigma^2 < 0  ) \Longrightarrow  3$    
+  *    $(\beta_{EU} > 0) \wedge (\beta_{EU}< \beta_{m}) \wedge (\beta_{m}>0) \wedge (\Delta_{t+\delta,t} \sigma^2  >0  ) \Longrightarrow  4$    
+  *    $(\beta_{EU} > 0) \wedge (\beta_{EU}> \beta_{m}) \wedge (\beta_{m}>0) \wedge (\Delta_{t+\delta,t} \sigma^2  >0  ) \Longrightarrow  5$    
+  *    $(\beta_{EU} > 0) \wedge (\beta_{EU}> \beta_{m}) \wedge (\beta_{m}<0) \wedge (\Delta_{t+\delta,t} \sigma^2  >0  ) \Longrightarrow  6$    
+  *    $(\beta_{EU} < 0) \wedge (\beta_{EU}< \beta_{m}) \wedge (\beta_{m}<0) \wedge (\Delta_{t+\delta,t} \sigma^2  >0  ) \Longrightarrow  7$    
+  *    $(\beta_{EU} < 0) \wedge (\beta_{EU}< \beta_{m}) \wedge (\beta_{m}>0) \wedge (\Delta_{t+\delta,t} \sigma^2  >0  ) \Longrightarrow  8$    
+  *    $(\beta_{EU} < 0) \wedge (\beta_{EU}> \beta_{m}) \wedge (\beta_{m}<0) \wedge (\Delta_{t+\delta,t} \sigma^2  >0  ) \Longrightarrow   9$    
+  *    $(\beta_{EU} < 0) \wedge (\beta_{EU}> \beta_{m}) \wedge (\beta_{m}<0) \wedge (\Delta_{t+\delta,t} \sigma^2  <0  ) \Longrightarrow  10$    
+  *    $(\beta_{EU} < 0) \wedge (\beta_{EU}< \beta_{m}) \wedge (\beta_{m}>0) \wedge (\Delta_{t+\delta,t} \sigma^2  <0  ) \Longrightarrow  11$    
+  *    $(\beta_{EU} < 0) \wedge (\beta_{EU}< \beta_{m}) \wedge (\beta_{m}<0) \wedge (\Delta_{t+\delta,t} \sigma^2  <0  ) \Longrightarrow  12$    
+  
+
+Further numerical labels are here introduced to recognize parallelism,
+crossing and any other unlabelled configuration:     
+
+  *    $(\beta_{EU} = \beta_{EU} ) \wedge (\beta_{EU}>0)  \Longrightarrow  13$    
+  *    $(\beta_{EU} = \beta_{EU} ) \wedge (\beta_{EU} = 0) \Longrightarrow  14$    
+  *    $(\beta_{EU} = \beta_{EU} ) \wedge (\beta_{EU} < 0) \Longrightarrow  15$    
+  *    $crossing \Longrightarrow  16$ 
+  *    $otherwise \Longrightarrow  17$    
+
+Numerical labels are also mapped into string labels:     
+
+  * 1: Catching up        
+  * 2: Flattening        
+  * 3: Inversion        
+  * 4: Outperforming        
+  * 5: Slower pace        
+  * 6: Diving        
+  * 7: Defending better        
+  * 8: Escaping        
+  * 9: Falling away        
+  * 10: Underperforming        
+  * 11: Recovering        
+  * 12: Reacting better        
+  * 13: Paralleling better       
+  * 14: Paralleling equal        
+  * 15: Paralleling worse       
+  * 16: Crossing       
+  * 17: Unspecified       
+  
+  
+  
+  
+<!--  
+A typical indicator is built so that higher the value better
+the countri it refers to.
+For a a "low better" indicator 
+the above calculations are performed after transforming
+values as:
+$$
+y_{top,i} - y_{m,i,t}
+$$
+where $y_{top,i}$ is the observed maximum value over
+countries and times.
+-->
+
+
+
+The first $12$ patterns are plotted in the Figure below: 
+<br><br>
+```{r,echo=FALSE}
+grid_patt <-  function(time=c(-1,0,1),timeRef=2002){
+  tipologia <- tibble(pattern=c("outperforming", "flattening", "inversion", "catching up", 
+"slower pace", "diving", "recovering", "better reaction", "falling away", 
+"under performing", "defending better", "escaping"))
+  taTB <- cbind(tipologia,beu0 = 23, beu1=rep(c(1,-1),c(6,6)),
+                alfam=NA, deltam=NA,bem0=NA,bem1=NA,
+                measureEU = NA,measureM=NA,time=NA)
+  taTB[c(1,4,9,10),4]    <- c(2,-2,-2,2)
+  taTB[c(1,4,9,10),5]    <- c(1,1,-1,-1)
+  #
+  taTB[c(2,3,  5,6,7,8, 11,12),4]    <- c(2,    2,    -2,  -2,    -2, -2,   2,  2)
+  taTB[c(2,3,  5,6,7,8, 11,12),5]    <- c(-0.5, -1.5, -0.5, -1.5, +2,  0.5, 0.5, 2)
+
+  # calcolo par retta emma
+  taTB$bem0 <-   taTB$beu0 +taTB$alfam 
+  taTB$bem1 <-   taTB$beu1 +taTB$deltam
+  taTB$measureEU <- map2(taTB$beu0,taTB$beu1,function(b0,b1){b0+b1*time})  
+  taTB$measureM <- map2(taTB$bem0,taTB$bem1,function(b0,b1){b0+b1*time}) 
+  #taTB$time <- map2(taTB$bem0,taTB$bem1,function(b0,b1){list(time)}) 
+  taTB$time <- list(time+timeRef) 
+  taTB$country <- factor('EU',levels=c('EU','MS'))
+  taTB
+}
+
+patTB <- grid_patt(c(-1,0,1))
+```
+
+A graphical  illustration of the above patterns 
+is shown  below.
+
+```{r,echo=FALSE,fig.width=7,fig.height=7}
+
+myTB <- tidyr::unnest(patTB,measureEU,measureM,time)
+
+ggplot(myTB, aes(x=time,y=measureEU))+facet_wrap(~pattern,ncol=3)+
+  geom_line() +
+  geom_line(aes(x=time,y=measureM),colour="blue",linetype = "3313")+
+  xlab("Time") + ylab("Measure")+
+  scale_x_continuous(  breaks = round(seq(min(myTB$time),
+              max(myTB$time), 
+              by = 1),1)) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  #guides(fill=guide_legend(title="EU vs MS"),title.position = "left")+
+  ggtitle("MS: dashed blue lines\nEU: solid black lines") 
+ 
+
+```
+
+
+
+
+We now assume that 
+**higher the indicator value worse the
+considered socio/economic feature in a member country**.
+
+Instead of creating new labels to tag patterns of this class
+of indicators,
+we transform the original indicator after noting that
+the absolute positioning of values in not relevant
+while judging for the presence of a given pattern.
+
+
+Let $\widetilde{Y}_{i}$ be the maximum value
+taken by this index referred by $i$:
+this could be $100\%$ under percentage unit,
+or $1$ if a ratio is considered.
+In other possibly unbounded indices,
+the maximum value over all MS expected in 2020
+can be chosen.
+The empirical maximum over MS at current year is fine.
+
+
+
+
+The following transformation put the maximum at zero
+and change the sign of differences
+$$
+v_{m,i,t} =  -(y_{m,i,t} - \widetilde{y}_{i}) = \widetilde{y}_{i} - y_{m,i,t}
+$$
+thus a transformed  indicator is defined.
+The interpretation is straightforward:
+$V$ is the distance of the original indicator value 
+from the worst situation, for example when
+the percentage  takes value $100\%$.
+If the original index decreases then the transformed
+value $V$ increases and the pattern recognition scheme
+detailed in the previous section applies
+in the same way as detailed for indicators of type
+"high is better".
+
+
+What happens to the straigh line summarizing
+the change of indicator value in the next step?
+
+```{r,fig.width=4,fig.height=3}
+require(tibble)
+myTB <- tribble(
+  ~time , ~indic,
+   1    ,   25,
+   10   ,   5
+)
+
+plot(indic ~ time,data=myTB,type="b",
+     ylim=c(0,40))
+```
+
+If the value $35$ is taken as reference value then
+the transformed indicator is now:
+```{r}
+mapInX <- function(veva, refMax=100){
+  refMax - veva
+}
+myTB2 <- dplyr::mutate(myTB,vaV= mapInX(myTB$indic,35))
+myTB2
+```
+thus the plot is:
+```{r,fig.width=4,fig.height=3}
+plot(indic ~ time,data=myTB,type="b",
+     ylim=c(0,40))
+lines(vaV ~ time,data=myTB2,col=2,lty=3)
+points(vaV ~ time,data=myTB2,col=2)
+```
+
+It can be shown that the slope is changed just in the sign,
+from negative to positive, but the absolute value is constant.
+What does it change if the reference value would be set to 30?
+
+```{r,fig.width=4,fig.height=3}
+myTB2 <- dplyr::mutate(myTB,
+                       vaV= mapInX(myTB$indic,35),
+                       vaV3= mapInX(myTB$indic,30))
+myTB2
+plot(indic ~ time,data=myTB,type="b",
+     ylim=c(0,40))
+lines(vaV3 ~ time,data=myTB2,col=4,lty=3)
+points(vaV3 ~ time,data=myTB2,col=4)
+lines(vaV ~ time,data=myTB2,col=2,lty=3)
+points(vaV ~ time,data=myTB2,col=2)
+```
+
+Clearly if the reference change, the distance form the worst
+state/situation changes as well.
+
+
+
+The *convergEU* package has a function to find patterns,
+for example with the *emp_20_64_MS* dataset:
+```{r}
+rePP <-  ms_pattern_ori( emp_20_64_MS, "time",type="highBetter")
+rePP$res$mat_without_summaries
+```
+and for labels
+```{r}
+rePP$res$mat_label_tags 
+```
+
+```{r testDE,echo=F,eval=F}
+names(emp_20_64_MS)
+matRaw <- emp_20_64_MS[,-1]
+EUave <- cbind(emp_20_64_MS[,1] ,EUave=apply(matRaw,1,mean))
+emp_20_64_MS[2:3,c("time","DE")]
+betams <- diff(unlist(emp_20_64_MS[2:3,c("DE")]))
+betams
+betaEU <-  diff(c(67.77143,67.90714))
+betaEU
+
+plot(c(2003,2004,2003,2004),c(c(67.77143,67.90714,68.4, 67.9 )),type="p")
+lines(c(2003,2004), c(68.4, 67.9 ),col=2)
+lines(c(2003,2004), c(67.77143,67.90714 ),col=4)
+# > betaEU
+# [1] 0.13571
+# > betaEU
+# [1] 0.13571
+# equal lines
+## coeu_grad(67.90714, 67.77143, 67.9, 68.4, 2004,2003 )
+```
+
+
+
+
+<br><br> 
+
+**References**  
+
+<br>
+The following reference may be consulted to find further details on convergence:    
+  
+  * Eurofound (2018), Upward convergence in the EU: Concepts, measurements and indicators, Publications Office of the European Union, Luxembourg; by: Massimiliano Mascherini, Martina Bisello, Hans Dubois and Franz Eiffe.    
+  
+
+<br><br>  
+  
+  
+
+
+ 
