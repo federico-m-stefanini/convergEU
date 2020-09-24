@@ -1,4 +1,4 @@
-![](inst/logoConvergEU5_github.png)  
+![](inst/logoConvergEU9_github.png)  
 
 # R package *convergEU*
 
@@ -10,10 +10,17 @@ followed by the production of country fiches and indicator fiches,
 makes possible to  automate the production of reports.
 This is the development release.  
 
-Some references of this project are linked below:   
+Some references  are:   
 
   *  [tutorial-conv.html](https://local.disia.unifi.it/stefanini/RESEARCH/coneu/tutorial-conv.html)   
   *  [Eurofound working paper](https://www.eurofound.europa.eu/sites/default/files/wpef20008.pdf) 
-  *  [Eurofound research report](https://www.eurofound.europa.eu/sites/default/files/ef_publication/field_ef_document/ef18003en.pdf)
+  *  [Eurofound research report](https://www.eurofound.europa.eu/sites/default/files/ef_publication/field_ef_document/ef18003en.pdf)       
+  *  To prepare fiches without any R code, please visit the Eurofound official   site of the [**convergEU app**](https://www.eurofound.europa.eu/data/convergence-hub/convergeu-app)  
 
-The stable release is available at https://CRAN.R-project.org/package=convergEU
+The stable release of the R package is available at https://CRAN.R-project.org/package=convergEU
+
+This project is a joint work with  **Eurofound**.<br>
+<img src="inst/EF2015_Logo_Colour_rid.png" width="113"  height="75">  
+
+
+
