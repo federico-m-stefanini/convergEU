@@ -19,7 +19,8 @@ Some references  are:
 
 The stable release of the R package is available at https://CRAN.R-project.org/package=convergEU
 
-This project is a joint work with  **Eurofound**.<br>
+This project is a joint work with  **Eurofound** developed under **contract &#8470;
+ 18-3030-42**.<br>
 <img src="inst/EF2015_Logo_Colour_rid.png" width="113"  height="75">  
 
 
