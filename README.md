@@ -25,7 +25,8 @@ This project is a joint work with  **Eurofound** developed under **contract &#84
 
 
 <br>  
-You may use  **devtools** to  install the current version under development:   
+
+You may use  *devtools* to  install the current version under development:   
 
 ```
 install.packages("devtools")
