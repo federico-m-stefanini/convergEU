@@ -24,4 +24,15 @@ This project is a joint work with  **Eurofound** developed under **contract &#84
 <img src="inst/EF2015_Logo_Colour_rid.png" width="113"  height="75">  
 
 
+<br>
+You may use  *devtools* to  install the current working version:   
+
+```
+install.packages("devtools")
+library(devtools)
+install_github(repo="federico-m-stefanini/convergEU",
+              build_vignettes= TRUE,
+              force= TRUE)
+```
+
 
