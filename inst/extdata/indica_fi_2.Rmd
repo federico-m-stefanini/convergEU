@@ -1111,6 +1111,15 @@ cat(tabeHTMLfinal)
  
 
 <br>
+Legend:    
+
+ * Indicator type: `r params$indiType`   
+ * dashed red lines: Member States    
+ * solid black lines: EU average   
+ 
+
+
+
 
 ```{r legend1,echo=FALSE,fig.width=6,fig.height=5} 
 refGGpat <- patt_legend_39()
@@ -1153,11 +1162,11 @@ out_packed_list$gridLegend <- refGGpat
 
 <br>
  
-Legend:    
+Legend:     
 
-* dashed red lines: Member States
-* solid black lines: EU average
-* Indicator type: `r params$indiType` 
+  * Indicator type: `r params$indiType`   
+  * dashed red lines: Member States   
+  * solid black lines: EU average  
 
 
 

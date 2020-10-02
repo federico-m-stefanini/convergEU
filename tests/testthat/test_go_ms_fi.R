@@ -34,7 +34,8 @@ testest <- function(){
     indiName= 'emp_20_64_MS',
     workTB= emp_20_64_MS
     )
-  browseURL(paste0(myOutDir,'/primoTest.html'))
+  
+  # browseURL(paste0(myOutDir,'/primoTest.html'))
 
 
 

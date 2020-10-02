@@ -859,42 +859,65 @@ cat(tabeHTMLfinal)
  
  
 
-<br>
-<!--   Graphical legend of patterns:-->
+
+<br><br>
+Legend:    
+
+ * Indicator type: `r params$indiType`   
+ * dashed red lines: Member States    
+ * solid black lines: EU average   
+ 
+
+
+
+
+```{r legend1,echo=FALSE,fig.width=6,fig.height=5} 
+refGGpat <- patt_legend_39()
+out_packed_list$gridLegend <- refGGpat
+
+grid.arrange(  refGGpat[[1]],
+               nrow = 1, ncol=1,
+      top= paste0("Patterns legend - 1"),
+      bottom = "Time",
+      left= "Indicator value")
+```
+
+<br><br>
+
+```{r legend2,echo=FALSE,fig.width=6,fig.height=5} 
+
+grid.arrange(  refGGpat[[2]],
+               nrow = 1, ncol=1,
+      top= paste0("Patterns legend - 2"),
+      bottom = "Time",
+      left= "Indicator value")
+```
+
 
  
-```{r,echo=FALSE,fig.width=8,fig.height=8} 
-
-
-if(params$indiType == "highBest"){
-    refGGpat <- patt_legend(indiType = "highBest")
-} else{  
-    refGGpat <- patt_legend(indiType = "lowBest")
-}
-
+```{r OLDpattern,echo=FALSE,eval=FALSE,fig.width=8,fig.height=8} 
+if(params$indiType == "highBest"){refGGpat <- patt_legend(indiType = "highBest")
+} else{  refGGpat <- patt_legend(indiType = "lowBest")}
 gridExtra::grid.arrange(  refGGpat,
                nrow = 1, ncol=1,
       top= paste0("Patterns legend"),
       bottom = "Time",
       left= "Indicator value")
-  
-
-  
-  
 out_packed_list$gridLegend <- refGGpat
 ```  
  
  
 
 
-**Note:** 21 is none of the previous patterns and requires visual inspection.
+<!-- **Note:** 21 is none of the previous patterns and requires visual inspection.-->
+
 <br>
- 
+
 Legend:    
 
-* dashed blue lines: Member States
-* solid lines: EU average
-* Indicator type: `r params$indiType` 
+  * Indicator type: `r params$indiType`     
+  * dashed blue lines: Member States   
+  * solid lines: EU average     
  
  
  
