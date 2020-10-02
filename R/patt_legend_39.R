@@ -50,13 +50,15 @@ patt_legend_39 <- function(
   
    tbG01<- dplyr::select(myTB2fin, Time,EU,Grp,MS)
    tbG10<- dplyr::bind_rows(myTB20,tbG01)
-  
-   outG1 <- 
-    ggplot(tbG10,
+   remapping <-  c(16,13,11,15,18,20,3,1,10,5,6,7,14,23,4,9,27,17,33,32)
+   tbG11 <- dplyr::mutate(tbG10, GrpL = remapping[c(1:10,1:10,11:20,11:20)])
+   
+   outG1 <- ggplot(tbG11,
            ggplot2::aes(x=Time, y=EU))+  
      ggplot2::geom_line()+
      ggplot2::geom_point() +
-     ggplot2::facet_wrap(vars(Grp),ncol = 7)+
+     #ggplot2::facet_wrap(vars(Grp),ncol = 7)+
+     ggplot2::facet_wrap(vars(GrpL),ncol = 7)+
      ggplot2::geom_line(
        ggplot2::aes(x=Time,y=MS),color="red",linetype = "dashed")+
      ggplot2::geom_point(
@@ -107,11 +109,15 @@ myTB33fin <- structure(list(Pat = c("EUT1", "EUT1", "EUT1", "EUT1", "EUT1",
 
  
  tbG2<- dplyr::bind_rows(myTB33fin,myTB44fin,myTBIIfin)
- outG2<- ggplot2::ggplot(tbG2,
+ remapping2 <- c(2,8,12,19,21,22,24,25,26,28,29,30,31,34,35:39)
+ tbG22 <- dplyr::mutate(tbG2, GrpL = remapping2[c(1:8,1:8,9:16,9:16,17:19,17:19)])
+ 
+ outG2<- ggplot2::ggplot(tbG22,
    ggplot2::aes(x=Time, y=EU))+  
    ggplot2::geom_line()+
    ggplot2::geom_point() +
-   ggplot2::facet_wrap(vars(Grp),ncol = 7)+
+   ggplot2::facet_wrap(vars(GrpL),ncol = 7)+
+   #ggplot2::facet_wrap(vars(Grp),ncol = 7)+
    ggplot2::geom_line(ggplot2::aes(x=Time,y=MS),color="red",linetype = "dashed")+
    ggplot2::geom_point(ggplot2::aes(x=Time,y=MS),color="red")+
    ggplot2::theme(axis.text.x = element_text(
