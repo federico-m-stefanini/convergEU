@@ -1,7 +1,7 @@
 #' Graphical legend about time patterns
 #'
-#' A 4 by 4 plot showing patterns of change along time is made
-#' and returned as a list of ggplot objects.
+#' A 5 by 4 plot showing patterns of change along time is made
+#' and returned a ggplot object.
 #'
 #' @param   indiType a string equal to "highBest" or "lowBest"
 #'          to select a type of indicator.
