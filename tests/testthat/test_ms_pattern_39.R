@@ -16,15 +16,18 @@ test_that("Simplest test ", {
     2004,     1.2,   3.1,    4.1,
     2005,     1.2,   3.0,    4.0
    )
-  
-  
+  # debug(ms_pattern_39)
+  # apply(testTB[-1],1,mean)
   res <- ms_pattern_39(testTB, "time")
-  expect_equal( res$res$mat_num_tags[[4]][3], 11)
-  # 2003, 2004
-  #emme0EU<-mean(0.9,   2.9,    4.1,)
-  #emme1EU <- mean(c(1.3,   2.9,    4.0))
-  #emme2EU <- mean(c(1.2,   3.1,    4.1))
-  #gradiEU <- (emme2EU -emme1EU)/(2004-2003)
+  # 2000, 2001
+  expect_equal( res$res$mat_num_tags[[2]][1], 27)
+  expect_equal( res$res$mat_num_tags[[2]][2], 4)
+  expect_equal( res$res$mat_num_tags[[2]][3], 14)
+
+  # 2002, 2003
+  expect_equal( res$res$mat_num_tags[[4]][1], 9)
+  expect_equal( res$res$mat_num_tags[[4]][2], 7)
+  expect_equal( res$res$mat_num_tags[[4]][3], 6)
   
 
 })
@@ -32,19 +35,6 @@ test_that("Simplest test ", {
 
 
  
-test_that("Simplest test ms_pattern_ori", {
-
-
-  resT <- ms_pattern_ori(emp_20_64_MS,"time","highBest")
-  expect_equal(as.numeric(unlist(resT$res$mat_num_tags[2,3])),1)
-  expect_equal(as.numeric(unlist(resT$res$mat_num_tags[2,5])),21)
-  expect_equal(as.numeric(unlist(resT$res$mat_num_tags[1,5])),4)
-
-  expect_equal(resT$res$mat_num_tags$Catching_up[2],
-               sum(as.numeric(resT$res$mat_num_tags[2,2:15]) == 1));
-
-})
-
 
  
 

@@ -789,25 +789,17 @@ tabe_tot <- function(mydata, first_last_years="First/Last"){
  
  
  
-```{r compilePatterns,results='asis',eval=T}
+```{r,results='asis',eval=T}
 estrattore <- as.logical((wkDF[,timeName] >= ptime_0) &  (wkDF[,timeName]<= ptime_t))
+
+myMSPat <- ms_pattern_ori(wkDF[estrattore,],
+                          timeName = timeName,
+                          typeIn= params$indiType)
 estrattore_1_n <- as.logical((wkDF[,timeName] == ptime_0) |   
                                (wkDF[,timeName]== ptime_t))
-
-## original patterns
-# myMSPat <- ms_pattern_ori(wkDF[estrattore,],
-#                           timeName = timeName,
-#                           typeIn= params$indiType)
-# myMSPat_first_last <- ms_pattern_ori(wkDF[estrattore_1_n ,],
-#                           timeName = timeName,
-#                           typeIn= params$indiType)
-### end of original patterns
-### new 39+1 patterns
-myMSPat <- ms_pattern_39(wkDF[estrattore,],
-                          timeName = timeName)
-myMSPat_first_last <- ms_pattern_39(wkDF[estrattore_1_n ,],
-                          timeName = timeName)
-## end of 39+1 new patterns
+myMSPat_first_last <- ms_pattern_ori(wkDF[estrattore_1_n ,],
+                          timeName = timeName,
+                          typeIn= params$indiType)
 
 workMatSco <- myMSPat$res$mat_num_tags
 workMatSco2 <- dplyr::bind_cols(myMSPat$res$mat_num_tags,
@@ -816,10 +808,8 @@ workMatSco2 <- dplyr::bind_cols(myMSPat$res$mat_num_tags,
 if(any(myMSPat$res$mat_num_tags[,1] != myMSPat_first_last$res$mat_num_tags[,1])){
   stop("Error:  countries do not match.")
 }
-```
 
 
-```{r,results='asis',eval=T}
 ##
 curCountries <- setdiff(names(wkDF),timeName)
 posiMS  <- posiMS2 <- vector()
@@ -837,6 +827,9 @@ if(params$aggregation != "custom"){
   map2str <- dplyr::tibble(MS = curCountries,
                            codeMS = curCountries)
 }
+
+
+
 ## below is fine
 for(aux in 1:nrow(workMatSco)){ 
     puntaMS <- which(map2str$codeMS ==   workMatSco$Country[aux ])
@@ -845,15 +838,11 @@ for(aux in 1:nrow(workMatSco)){
     workMatSco2$Country[aux ] <- map2str$MS[puntaMS]
     
 }
+
+# filter 
 mappaLongStri <- sapply(seleCount,function(vx){which(vx == nomiSele)})
 seleEstresi <- nomiSeleExt[mappaLongStri]
 workMatSco3 <- dplyr::filter(workMatSco2, Country %in% seleEstresi)
-
-```
-
-```{r,eval=FALSE,echo=F}
-# temporaneo
-# filter 
 tabeHTMLfinal <- tabe_tot(workMatSco3, 
                           first_last_years = paste(ptime_0,"/", 
                                                    ptime_t,sep=""))
@@ -866,29 +855,7 @@ out_packed_list$patterns <- list(css="<style>\n.vertical-text {\n\tdisplay: inli
 cat(tabeHTMLfinal)
 ```
 
-```{r,echo=F,eval=F}
- workMatSco2 %>%
-  kableExtra::kbl() %>%
-  kable_styling()
-```
 
-```{r}
-workMatSco3 <- dplyr::rename(workMatSco3, `#(1)` = Catching_up ,
-                                          `#(9)` = Falling_away,
-                                          `#(6)` = Diving )
-#workMatSco3 %>%
-#  kable() %>%
-#  kable_styling()
-tmpRR <- names(workMatSco3)
-kable(workMatSco3,
-      "html",col.names = kableExtra::linebreak(c(tmpRR),align="c"
-                                               #,linebreaker="/"
-                                               )) %>% 
-  kableExtra::kable_styling(c("striped","bordered"), 
-                            full_width = F, position="left") %>%
-  kableExtra::row_spec(0, angle = 0)
-
-```
  
  
 

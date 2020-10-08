@@ -15,9 +15,7 @@ testest <- function(){
 
 
   myOutDir <- tempdir()
-
-
-  go_ms_fi(
+ go_ms_fi(
     workDF =NA,#'emp_20_64_MS',
     countryRef ='IT',
     otherCountries = 'NA',#c('DE')",
