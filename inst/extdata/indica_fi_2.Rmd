@@ -893,8 +893,8 @@ my_MS
 
 
 
-The table represents the 20 convergence patterns of the 'aggregation' countries
- in the chosen timeframe. The values in the table refer to the patterns shown in the
+The table represents  convergence patterns of the 'aggregation' countries
+ in the chosen time frame. The values in the table refer to the patterns shown in the
  graphical legend below.
 
 

@@ -5,7 +5,7 @@
 #'
 #' @param   indiType a string equal to "highBest" or "lowBest"
 #'          to select a type of indicator.
-#' @return a list of ggplot objects to be plotted using grid.arrange()
+#' @return a ggplot object to be plotted using grid.arrange()
 #'         function.
 #'
 #'

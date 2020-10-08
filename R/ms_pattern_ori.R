@@ -38,7 +38,6 @@ ms_pattern_ori <- function(myTB,
                          res_chk$err);
     return(out_obj)
   }else{};
-  #
   countries <- setdiff(names(myTB),timeName)
   # type of indicator
   if(typeIn == "lowBest") {
@@ -60,42 +59,23 @@ ms_pattern_ori <- function(myTB,
   temp_num_pat <- matrix(NA,nrow=length(countries),  ncol=num_rows)
   temp_str_pat <- matrix(NA,nrow=length(countries),  ncol=num_rows)
   temp_str_pat_num <- matrix(NA,nrow=length(countries),  ncol=num_rows)
-
-  mappa_str_patt <- dplyr::tibble(
-      tag.HB = c("Catching up", "Flattening", "Inversion", "Outperforming",
-       "Slower pace", "Diving", "Defending better", "Escaping",
-       "Falling away", "Underperforming", "Recovering",
-       "Reacting better", "Parallel-better-over", "Parallel-equal-over",
-       "Parallel-worse-over", "Parallel-worse-under", "Parallel-equal-under",
-       "Parallel-better-under", "Crossing", "Crossing reversed",
-       "Other (Inspection)"
-     ),
-     num.tag=1:21,
-     num.tag.HB=1:21,
-     num.tag.LB=c(10,12,11,9,7,8,5,6,4,1,3,2,16,17,18,13,14,15,20,19,21),
-     tag.LB =
-     c("Underperforming" ,
-     "Reacting better" ,
-     "Recovering" ,
-     "Falling away",
-     "Defending better",
-     "Escaping",
-     "Slower pace",
-     "Diving",
-     "Outperforming",
-     "Catching up",
-     "Inversion",
-     "Flattening",
-     "Parallel-worse-under" ,
-     "Parallel-equal-under" ,
-     "Parallel-better-under" ,
-     "Parallel-better-over" ,
-     "Parallel-equal-over" ,
-     "Parallel-worse-over" ,
-     "Crossing reversed",
-     "Crossing",
-     "Other (Inspection)")
-     )
+  #
+  mappa_str_patt <- structure(list(tag.HB = c("Catching up", "Flattening", "Inversion", 
+        "Outperforming", "Slower pace", "Diving", "Defending better", 
+        "Escaping", "Falling away", "Underperforming", "Recovering", 
+        "Reacting better", "Parallel-better-over", "Parallel-equal-over", 
+        "Parallel-worse-over", "Parallel-worse-under", "Parallel-equal-under", 
+        "Parallel-better-under", "Crossing", "Crossing reversed", "Other (Inspection)"
+          ), num.tag = 1:21, num.tag.HB = 1:21, num.tag.LB = c(10, 12, 
+          11, 9, 7, 8, 5, 6, 4, 1, 3, 2, 16, 17, 18, 13, 14, 15, 20, 19, 
+          21), tag.LB = c("Underperforming", "Reacting better", "Recovering", 
+          "Falling away", "Defending better", "Escaping", "Slower pace", 
+          "Diving", "Outperforming", "Catching up", "Inversion", "Flattening", 
+          "Parallel-worse-under", "Parallel-equal-under", "Parallel-better-under", 
+          "Parallel-better-over", "Parallel-equal-over", "Parallel-worse-over", 
+          "Crossing reversed", "Crossing", "Other (Inspection)")), row.names = c(NA, 
+          -21L), class = c("tbl_df", "tbl", "data.frame"))
+  #
   puntaCountry<- 0
   for( auxC in countries){
     puntaCountry <- puntaCountry + 1
@@ -145,7 +125,7 @@ ms_pattern_ori <- function(myTB,
    mat_num_tags[,"Catching_up"] <- cumulaOne
    mat_num_tags[,"Falling_away"] <- cumulaNine
    mat_num_tags[,"Diving"] <- cumulaSix
-  # # end of summaries
+  ## end of summaries
   out_obj$res <-  list(
     mat_num_tags   = mat_num_tags,
     mat_label_tags = mat_label_tags,

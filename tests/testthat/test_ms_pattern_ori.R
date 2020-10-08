@@ -320,8 +320,8 @@ test_that("Test lowBest", {
       2000,     19,   20,    21,
       2005,     29,   30,    31
     )
-    # mean(c(0.8,   2.7,    3.9))
-    # mean(c(1.2,   3.2,    4.2))
+    # mean(c( 19,   20,    21))
+    # mean(c(29,   30,    31))
 
     # critical pattern: parallelism
     resT1 <- ms_pattern_ori(testTB,"time","lowBest")

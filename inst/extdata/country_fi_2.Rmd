@@ -637,7 +637,7 @@ out_packed_list$MSdyn <- my_MS
 ### Convergence and divergence patterns 
  
 
-The table represents the 20 convergence patterns of the
+The table represents  convergence patterns of the
 `r params$aggregation` countries in
  the chosen timeframe. The values in the table refer to the patterns shown in the graphical
  legend below.
