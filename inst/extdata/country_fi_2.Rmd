@@ -23,7 +23,6 @@ editor_options:
 ---
 
 
-
 ```{r setup, include=FALSE,eval=TRUE}
 
 library(convergEU)
@@ -57,6 +56,101 @@ knitr::opts_chunk$set(
 
 ```
 
+
+```{r debug1,echo=FALSE,eval=FALSE,warning=FALSE,message=FALSE}
+params <- list(workingDF = NA, time_0 = 2005, time_t = 2010, timeName = "time", 
+    country = "IT", otherCountries = "NA", indiType = "highBest", 
+    indiName = "emp_20_64_MS", aggregation = "EU27", x_angle = 45, 
+    dataNow = structure(1602310206.79617, class = c("POSIXct", 
+    "POSIXt")), auth = "A.Student", outFile = "primoTest", outDir = "/tmp/RtmpFwRXrp", 
+    workTB = structure(list(time = c(2002, 2003, 2004, 2005, 
+    2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 
+    2016, 2017, 2018), AT = c(70.9, 71.3, 68.4, 70.4, 71.6, 72.8, 
+    73.8, 73.4, 73.9, 74.2, 74.4, 74.6, 74.2, 74.3, 74.8, 75.4, 
+    76.2), BE = c(64.7, 64.5, 65.8, 66.5, 66.5, 67.7, 68, 67.1, 
+    67.6, 67.3, 67.2, 67.2, 67.3, 67.2, 67.7, 68.5, 69.7), BG = c(56.5, 
+    58.7, 61.2, 61.9, 65.1, 68.4, 70.7, 68.8, 64.7, 62.9, 63, 
+    63.5, 65.1, 67.1, 67.7, 71.3, 72.4), CY = c(75.1, 75.4, 75.7, 
+    74.4, 75.8, 76.8, 76.5, 75.3, 75, 73.4, 70.2, 67.2, 67.6, 
+    67.9, 68.7, 70.8, 73.9), CZ = c(71.7, 71, 70.1, 70.7, 71.2, 
+    72, 72.4, 70.9, 70.4, 70.9, 71.5, 72.5, 73.5, 74.8, 76.7, 
+    78.5, 79.9), DE = c(68.8, 68.4, 67.9, 69.4, 71.1, 72.9, 74, 
+    74.2, 75, 76.5, 76.9, 77.3, 77.7, 78, 78.6, 79.2, 79.9), 
+        DK = c(78.3, 77.4, 78.1, 78, 79.4, 79, 78.7, 76.1, 74.9, 
+        74.8, 74.3, 74.3, 74.7, 75.4, 76, 76.6, 77.5), EE = c(68.3, 
+        69.1, 70.2, 72, 75.9, 76.9, 77.1, 70, 66.8, 70.6, 72.2, 
+        73.3, 74.3, 76.5, 76.6, 78.7, 79.5), EL = c(62.8, 63.8, 
+        64.3, 64.4, 65.6, 65.8, 66.3, 65.6, 63.8, 59.6, 55, 52.9, 
+        53.3, 54.9, 56.2, 57.8, 59.5), ES = c(63.2, 64.3, 65.2, 
+        67.5, 69, 69.7, 68.5, 64, 62.8, 62, 59.6, 58.6, 59.9, 
+        62, 63.9, 65.5, 67), FI = c(73.2, 72.9, 72.5, 73, 73.9, 
+        74.8, 75.8, 73.5, 73, 73.8, 74, 73.3, 73.1, 72.9, 73.4, 
+        74.2, 76.3), FR = c(68.6, 69.7, 69.2, 69.4, 69.4, 69.9, 
+        70.5, 69.5, 69.3, 69.2, 69.4, 69.5, 69.2, 69.5, 70, 70.6, 
+        71.3), HR = c(57.9, 58.4, 59.7, 60, 60.6, 63.9, 64.9, 
+        64.2, 62.1, 59.8, 58.1, 57.2, 59.2, 60.6, 61.4, 63.6, 
+        65.2), HU = c(61.4, 62.4, 62, 62.2, 62.6, 62.3, 61.5, 
+        60.1, 59.9, 60.4, 61.6, 63, 66.7, 68.9, 71.5, 73.3, 74.4
+        ), IE = c(70.8, 70.4, 71, 72.6, 73.4, 75.1, 73.5, 68, 
+        65.5, 64.6, 64.5, 66.5, 68.1, 69.9, 71.4, 73, 74.1), 
+        IT = c(59.2, 60.1, 61.7, 61.5, 62.4, 62.7, 62.9, 61.6, 
+        61, 61, 60.9, 59.7, 59.9, 60.5, 61.6, 62.3, 63), LT = c(68, 
+        70.7, 69.6, 70.7, 71.3, 72.7, 72, 67, 64.3, 66.9, 68.5, 
+        69.9, 71.8, 73.3, 75.2, 76, 77.8), LU = c(68.4, 67.2, 
+        67.7, 69, 69.1, 69.6, 68.8, 70.4, 70.7, 70.1, 71.4, 71.1, 
+        72.1, 70.9, 70.7, 71.5, 72.1), LV = c(66.3, 67.4, 67.4, 
+        69.1, 73.2, 75.2, 75.4, 66.6, 64.3, 66.3, 68.1, 69.7, 
+        70.7, 72.5, 73.2, 74.8, 76.8), MT = c(58.2, 57.8, 57.3, 
+        57.4, 57.9, 58.6, 59.2, 59, 60.1, 61.6, 63.9, 66.2, 67.9, 
+        69, 71.1, 73, 75.5), NL = c(75.8, 75.3, 74.9, 72.7, 73.7, 
+        75.5, 76.9, 76.8, 76.2, 76.4, 76.6, 75.9, 75.4, 76.4, 
+        77.1, 78, 79.2), PL = c(57.7, 57.3, 57, 58.3, 60.1, 62.7, 
+        65, 64.9, 64.3, 64.5, 64.7, 64.9, 66.5, 67.8, 69.3, 70.9, 
+        72.2), PT = c(74.1, 73, 72.6, 72.2, 72.6, 72.5, 73.1, 
+        71.1, 70.3, 68.8, 66.3, 65.4, 67.6, 69.1, 70.6, 73.4, 
+        75.4), RO = c(64.3, 64.8, 64.7, 63.6, 64.8, 64.4, 64.4, 
+        63.5, 64.8, 63.8, 64.8, 64.7, 65.7, 66, 66.3, 68.8, 69.9
+        ), SE = c(78.8, 78.5, 77.8, 78.1, 78.8, 80.1, 80.4, 78.3, 
+        78.1, 79.4, 79.4, 79.8, 80, 80.5, 81.2, 81.8, 82.6), 
+        SI = c(70, 68.1, 71, 71.1, 71.5, 72.4, 73, 71.9, 70.3, 
+        68.4, 68.3, 67.2, 67.7, 69.1, 70.1, 73.4, 75.4), SK = c(63.2, 
+        65, 63.5, 64.5, 66, 67.2, 68.8, 66.4, 64.6, 65, 65.1, 
+        65, 65.9, 67.7, 69.8, 71.1, 72.4), UK = c(74.3, 74.7, 
+        74.9, 75.2, 75.2, 75.2, 75.2, 73.9, 73.5, 73.5, 74.1, 
+        74.8, 76.2, 76.8, 77.5, 78.2, 78.7)), class = c("spec_tbl_df", 
+    "tbl_df", "tbl", "data.frame"), row.names = c(NA, -17L), spec = structure(list(
+        cols = list(time = structure(list(), class = c("collector_double", 
+        "collector")), AT = structure(list(), class = c("collector_double", 
+        "collector")), BE = structure(list(), class = c("collector_double", 
+        "collector")), BG = structure(list(), class = c("collector_double", 
+        "collector")), CY = structure(list(), class = c("collector_double", 
+        "collector")), CZ = structure(list(), class = c("collector_double", 
+        "collector")), DE = structure(list(), class = c("collector_double", 
+        "collector")), DK = structure(list(), class = c("collector_double", 
+        "collector")), EE = structure(list(), class = c("collector_double", 
+        "collector")), EL = structure(list(), class = c("collector_double", 
+        "collector")), ES = structure(list(), class = c("collector_double", 
+        "collector")), FI = structure(list(), class = c("collector_double", 
+        "collector")), FR = structure(list(), class = c("collector_double", 
+        "collector")), HR = structure(list(), class = c("collector_double", 
+        "collector")), HU = structure(list(), class = c("collector_double", 
+        "collector")), IE = structure(list(), class = c("collector_double", 
+        "collector")), IT = structure(list(), class = c("collector_double", 
+        "collector")), LT = structure(list(), class = c("collector_double", 
+        "collector")), LU = structure(list(), class = c("collector_double", 
+        "collector")), LV = structure(list(), class = c("collector_double", 
+        "collector")), MT = structure(list(), class = c("collector_double", 
+        "collector")), NL = structure(list(), class = c("collector_double", 
+        "collector")), PL = structure(list(), class = c("collector_double", 
+        "collector")), PT = structure(list(), class = c("collector_double", 
+        "collector")), RO = structure(list(), class = c("collector_double", 
+        "collector")), SE = structure(list(), class = c("collector_double", 
+        "collector")), SI = structure(list(), class = c("collector_double", 
+        "collector")), SK = structure(list(), class = c("collector_double", 
+        "collector")), UK = structure(list(), class = c("collector_double", 
+        "collector"))), default = structure(list(), class = c("collector_guess", 
+        "collector")), skip = 1), class = "col_spec")))
+```
  
 
 
@@ -126,8 +220,10 @@ wkDF0 <-  params$workTB
 wkDF0 <- dplyr::filter(wkDF0, (.data[[timeName]]   <= ptime_t) & (.data[[timeName]] >= ptime_0))
 
 otherCountries <-  eval(parse(text= params$otherCountries ))
-if(is.na(otherCountries[1])){
+if(is.na(otherCountries[1]) && params$aggregation =="custom"){
    otherCountries <- setdiff(names(wkDF0),timeName)
+}else if(is.na(otherCountries[1]) && params$aggregation !="custom"){
+   otherCountries <- convergEU_glb()[[params$aggregation]]$memberStates$codeMS
 }
 otherCountries <- setdiff(otherCountries,seleCountry)
 
@@ -340,7 +436,7 @@ idea of the individual development of the countries selected.
 <br>
 
 ```{r,echo=FALSE,eval=T}
-#  othercountres forced to be present without missing values
+#  other countries forced to be present without missing values
 
     tmp2 <-  ttmp[, c(timeName,seleCountry,otherCountries)]
     tmp2$EU<-ttmp$mean
@@ -470,7 +566,7 @@ altezzaG2 <- 3 + 7 * (length(curCountries)/30)
 ```{r}
 ## NOTE !!!!
 ## only calculations on subsequent years are supported.
-## Time intervals of different leghts not supported
+## Time intervals of different lengths not supported
 ##
 curCountries <- params$country
 if(!is.na(otherCountries[1])){
@@ -584,7 +680,7 @@ altezzaG0 <- 3 + 6 * (length(curCountries)/30)
 ```{r,fig.height=altezzaG0}
 ## NOTE !!!!
 ## only calculations on subsequent years are supported.
-## Time intervals of different leghts not supported
+## Time intervals of different lengths not supported
 ##
 
 curCountries <- params$country
@@ -717,9 +813,16 @@ for(aux in etichetteH){
                aux,"</div></div> </th>", sep="",collapse="\n");
 }  
 res <- paste(res,  "<th style=\"text-align:center;\"> <div style=\"color:#2676ba;\">")  
-res <- paste(res, "Catching up<br>(1) </div> </th> <th style=\"text-align:center;\"> ")
-res <- paste(res,"<div style=\"color:#2676ba;\"> Falling away <br>(9) </div> </th>")
-res <- paste(res, "<th style=\"text-align:center;\">  <div style=\"color:#2676ba;\">Diving  <br>(6)</div> </th>")
+# changed code
+# res <- paste(res, "Catching up<br>(1) </div> </th> <th style=\"text-align:center;\"> ")
+# res <- paste(res,"<div style=\"color:#2676ba;\"> Falling away <br>(9) </div> </th>")
+# res <- paste(res, "<th style=\"text-align:center;\">  <div style=\"color:#2676ba;\">Diving  <br>(6)</div> </th>")
+# new titles October 2020: number sign &#35; introduced
+res <- paste(res, " &#35;(1) </div> </th> <th style=\"text-align:center;\"> ")
+res <- paste(res,"<div style=\"color:#2676ba;\"> &#35;(9) </div> </th>")
+res <- paste(res, "<th style=\"text-align:center;\">  <div style=\"color:#2676ba;\">&#35;(6)</div> </th>")
+# end of changes
+
 res <- paste(res,"<th style=\"text-align:center;\"><div class=\"vertical-text\">",
              "<div class=\"vertical-text__inner\" style=\"color:#2676ba;\">",
                etich_col_1r,"</div></div> </th>", 
@@ -731,7 +834,8 @@ corpo_1 <-  function(record){ # tutta la riga anche con colonna extra
   dime <- length(record)-1
   # filtro record for colouring the background
   templato <- list()
-  templato[1:21] <- "<td style=\"text-align:center;\">";
+  # now patterns are 40
+  templato[1:40] <- "<td style=\"text-align:center;\">";
   
   # end of changes
   templato[[1]] <- "<td style=\"text-align:center;background-color:#dbe7c2;\">";
@@ -783,7 +887,7 @@ tabe_tot <- function(mydata, first_last_years="First/Last"){
   res
 }
 
-# 
+ 
 ```
 
  
@@ -801,7 +905,7 @@ estrattore_1_n <- as.logical((wkDF[,timeName] == ptime_0) |
 # myMSPat_first_last <- ms_pattern_ori(wkDF[estrattore_1_n ,],
 #                           timeName = timeName,
 #                           typeIn= params$indiType)
-### end of original patterns
+# ### end of original patterns
 ### new 39+1 patterns
 myMSPat <- ms_pattern_39(wkDF[estrattore,],
                           timeName = timeName)
@@ -849,11 +953,12 @@ mappaLongStri <- sapply(seleCount,function(vx){which(vx == nomiSele)})
 seleEstresi <- nomiSeleExt[mappaLongStri]
 workMatSco3 <- dplyr::filter(workMatSco2, Country %in% seleEstresi)
 
-```
 
-```{r,eval=FALSE,echo=F}
+
+#{r,eval=TRUE,echo=F}
 # temporaneo
 # filter 
+# debug(tabe_tot)
 tabeHTMLfinal <- tabe_tot(workMatSco3, 
                           first_last_years = paste(ptime_0,"/", 
                                                    ptime_t,sep=""))
@@ -867,12 +972,12 @@ cat(tabeHTMLfinal)
 ```
 
 ```{r,echo=F,eval=F}
+# tests in progress to substitute the HTML table
+
  workMatSco2 %>%
   kableExtra::kbl() %>%
   kable_styling()
-```
 
-```{r}
 workMatSco3 <- dplyr::rename(workMatSco3, `#(1)` = Catching_up ,
                                           `#(9)` = Falling_away,
                                           `#(6)` = Diving )
@@ -910,7 +1015,7 @@ out_packed_list$gridLegend <- refGGpat
 
 grid.arrange(  refGGpat[[1]],
                nrow = 1, ncol=1,
-      top= paste0("Patterns legend - 1"),
+      top= paste0("Patterns legend"),
       bottom = "Time",
       left= "Indicator value")
 ```
@@ -921,7 +1026,7 @@ grid.arrange(  refGGpat[[1]],
 
 grid.arrange(  refGGpat[[2]],
                nrow = 1, ncol=1,
-      top= paste0("Patterns legend - 2"),
+      top= paste0("Patterns legend (continued)"),
       bottom = "Time",
       left= "Indicator value")
 ```
@@ -933,7 +1038,7 @@ if(params$indiType == "highBest"){refGGpat <- patt_legend(indiType = "highBest")
 } else{  refGGpat <- patt_legend(indiType = "lowBest")}
 gridExtra::grid.arrange(  refGGpat,
                nrow = 1, ncol=1,
-      top= paste0("Patterns legend"),
+      top= paste0("Patterns legend (continued)"),
       bottom = "Time",
       left= "Indicator value")
 out_packed_list$gridLegend <- refGGpat
@@ -949,8 +1054,8 @@ out_packed_list$gridLegend <- refGGpat
 Legend:    
 
   * Indicator type: `r params$indiType`     
-  * dashed blue lines: Member States   
-  * solid lines: EU average     
+  * dashed red lines: Member States   
+  * solid black lines: EU average     
  
  
  
@@ -972,6 +1077,8 @@ if(!is.na(otherCountries[1])){
 altezzaG <- 3 + 4 * (length(curCountries)/30)
 #height was 6
 ```
+
+
 
 ### Total decrease and increase in the gap with the `r params$aggregation` mean  
 

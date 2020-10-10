@@ -4,8 +4,8 @@ context("Scoreboard numerical calculations")
 
 
 
-#  undebug(go_ms_fish)
-#  debug(go_ms_fish)
+#  undebug(go_ms_fi)
+#  debug(go_ms_fi)
 
 
 test_that("Basic operation", {
@@ -14,16 +14,16 @@ test_that("Basic operation", {
 testest <- function(){
 
 
-  myOutDir <- tempdir()
+ myOutDir <- tempdir()
  go_ms_fi(
     workDF =NA,#'emp_20_64_MS',
     countryRef ='IT',
-    otherCountries = 'NA',#c('DE')",
+    otherCountries = 'NA',#"c('DE')",
     time_0 = 2005,
     time_t = 2010,
     tName = 'time',
     indiType = "highBest",
-    aggregation= 'EU28',
+    aggregation= 'EU12',
     x_angle=  45,
     dataNow=  Sys.time(),
     author = 'A.Student',
@@ -33,7 +33,7 @@ testest <- function(){
     workTB= emp_20_64_MS
     )
   
-  # browseURL(paste0(myOutDir,'/primoTest.html'))
+   browseURL(paste0(myOutDir,'/primoTest.html'))
 
 
 
@@ -42,12 +42,12 @@ testest <- function(){
   go_ms_fi(
     workDF ='emp_20_64_MS',
     countryRef ='IT',
-    otherCountries = 'NA',#c('DE')",
+    otherCountries = "c('DE','FR')",
     time_0 = 2005,
     time_t = 2010,
     tName = 'time',
     indiType = "highBest",
-    aggregation= 'EU28',
+    aggregation= 'EU27',
     x_angle=  45,
     dataNow=  Sys.time(),
     author = 'A.Student',
