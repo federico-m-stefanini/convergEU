@@ -43,7 +43,7 @@ testest <- function(){
     indicaT = 'emp_20_64',
     indiType = c('highBest','lowBest')[1],
     seleMeasure = 'all',
-    seleAggre = 'EU28',
+    seleAggre = 'EU12',
     x_angle =  45,
     data_res_download =  FALSE,
     auth = 'A.Student',
@@ -54,7 +54,7 @@ testest <- function(){
     selfContained = TRUE
   )
 
-  # browseURL( file.path(tempdir(),'test_indica-fi-emp_20_64_MS.html'))
+  # browseURL( file.path(tempdir(),'test_indica-fi-emp_20_64_MS_ONE.html'))
 
 
 
@@ -121,7 +121,7 @@ go_indica_fi(
     # indiType = 'highBest',
     indiType = 'lowBest',
     seleMeasure = 'all',
-    seleAggre = 'EurozoneBITUR',
+    seleAggre = 'custom',
     x_angle =  45,
     data_res_download =  FALSE,
     auth = 'A.Student',
@@ -131,7 +131,7 @@ go_indica_fi(
   )
 
 
-browseURL(file.path(folder_tmp,'newtest_IT-emp_20_64_MS.html'))
+browseURL(file.path(tempdir(),'newtest_IT-emp_20_64_MS.html'))
 
 
 

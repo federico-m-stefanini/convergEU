@@ -970,15 +970,9 @@ for(aux in etichetteH){
                aux,"</div></div> </th>", sep="",collapse="\n");
 }  
 res <- paste(res,  "<th style=\"text-align:center;\"> <div style=\"color:#2676ba;\">")  
-# res <- paste(res, "Catching up<br>(1) </div> </th> <th style=\"text-align:center;\"> ")
-# res <- paste(res,"<div style=\"color:#2676ba;\"> Falling away <br>(9) </div> </th>")
-# res <- paste(res, "<th style=\"text-align:center;\">  <div style=\"color:#2676ba;\">Diving  <br>(6)</div> </th>")
-# new titles October 2020: number sign &#35; introduced
-res <- paste(res, " &#35;(1) </div> </th> <th style=\"text-align:center;\"> ")
-res <- paste(res,"<div style=\"color:#2676ba;\">  &#35;(9) </div> </th>")
-res <- paste(res, "<th style=\"text-align:center;\">  <div style=\"color:#2676ba;\"> &#35;(6)</div> </th>")
-
-
+res <- paste(res, "Catching up<br>(1) </div> </th> <th style=\"text-align:center;\"> ")
+res <- paste(res,"<div style=\"color:#2676ba;\"> Falling away <br>(9) </div> </th>")
+res <- paste(res, "<th style=\"text-align:center;\">  <div style=\"color:#2676ba;\">Diving  <br>(6)</div> </th>")
 res <- paste(res,"<th style=\"text-align:center;\"><div class=\"vertical-text\">",
              "<div class=\"vertical-text__inner\" style=\"color:#2676ba;\">",
                etich_col_1r,"</div></div> </th>", 
@@ -990,8 +984,7 @@ corpo_1 <-  function(record){ # tutta la riga anche con colonna extra
   dime <- length(record)-1
   # filtro record for colouring the background
   templato <- list()
-  # october 2020:  39 patterns + the "inspection required"
-  templato[1:40] <- "<td style=\"text-align:center;\">";
+  templato[1:21] <- "<td style=\"text-align:center;\">";
   
   # end of changes
   templato[[1]] <- "<td style=\"text-align:center;background-color: #dbe7c2\">";
@@ -1050,26 +1043,15 @@ tabe_tot <- function(mydata, first_last_years="First/Last"){
  
 ```{r,results='asis',eval=T}
 estrattore <- as.logical((wkDF2[,timeName] >= ptime_0) &  (wkDF2[,timeName]<= ptime_t))
-estrattore_1_n <- as.logical((wkDF2[,timeName] == ptime_0) |  (wkDF2[,timeName]== ptime_t))
 
-# original code pre 39 patterns
-# myMSPat <- ms_pattern_ori(wkDF2[estrattore,],
-#                           timeName = timeName,
-#                           typeIn= params$indiType)
-# myMSPat_first_last <- ms_pattern_ori(wkDF2[estrattore_1_n ,],
-#                           timeName = timeName,
-#                           typeIn= params$indiType)
-# end original code
-### new 39+1 patterns
-myMSPat <- ms_pattern_39(wkDF2[estrattore,],
-                          timeName = timeName)
-myMSPat_first_last <- ms_pattern_39(wkDF2[estrattore_1_n ,],
-                          timeName = timeName)
-## end of 39+1 new patterns
-
-
-
-
+myMSPat <- ms_pattern_ori(wkDF2[estrattore,],
+                          timeName = timeName,
+                          typeIn= params$indiType)
+estrattore_1_n <- as.logical((wkDF2[,timeName] == ptime_0) |   
+                               (wkDF2[,timeName]== ptime_t))
+myMSPat_first_last <- ms_pattern_ori(wkDF2[estrattore_1_n ,],
+                          timeName = timeName,
+                          typeIn= params$indiType)
 
 workMatSco <- myMSPat$res$mat_num_tags
 workMatSco2 <- dplyr::bind_cols(myMSPat$res$mat_num_tags,
@@ -1145,7 +1127,7 @@ out_packed_list$gridLegend <- refGGpat
 
 grid.arrange(  refGGpat[[1]],
                nrow = 1, ncol=1,
-      top= paste0("Patterns legend"),
+      top= paste0("Patterns legend - 1"),
       bottom = "Time",
       left= "Indicator value")
 ```
@@ -1156,7 +1138,7 @@ grid.arrange(  refGGpat[[1]],
 
 grid.arrange(  refGGpat[[2]],
                nrow = 1, ncol=1,
-      top= paste0("Patterns legend (continued)"),
+      top= paste0("Patterns legend - 2"),
       bottom = "Time",
       left= "Indicator value")
 ```
