@@ -11,10 +11,10 @@
 #'
 #'
 #' @examples
-#'
+#' require(ggplot2)
 #' refGGpat <- patt_legend_39()
 #'
-#'
+#'  
 #'
 #' @export
 #'
@@ -31,10 +31,15 @@ patt_legend_39 <- function(
   12, 12, 12, 16, -12, -2, 4, 6, 8, 22, 12, 6, 2, 2, -2, -2, -2, 
   -4, -6)), row.names = c(NA, -20L), class = c("tbl_df", "tbl", "data.frame"))
   
-  myTB20 <- dplyr::select(dplyr::mutate(myTB2, Time=Y1,
-                   EU= EUT1,
-                   Grp=Pat,
-                   MS=Indic),Time,EU,Grp,MS)
+  myTB20 <- dplyr::select(dplyr::mutate(myTB2, 
+                   Time=.data$Y1,
+                   EU= .data$EUT1,
+                   Grp=.data$Pat,
+                   MS=.data$Indic),
+                   .data$Time,
+                   .data$EU,
+                   .data$Grp,
+                   .data$MS)
   
   myTB2fin <-structure(list(Pat = c("EUT1", "EUT1", "EUT1", "EUT1", "EUT1", 
   "EUT1", "EUT1", "EUT1", "EUT1", "EUT1", "EUT2", "EUT2", "EUT2", 
@@ -48,21 +53,27 @@ patt_legend_39 <- function(
   15L, 16L, 17L, 18L, 19L, 20L, 11L, 12L, 13L, 14L, 15L, 16L, 17L, 
   18L, 19L, 20L)), row.names = c(NA, -20L), class = c("tbl_df", "tbl", "data.frame"))                                                   
   
-   tbG01<- dplyr::select(myTB2fin, Time,EU,Grp,MS)
+   tbG01<- dplyr::select(myTB2fin, 
+                         .data$Time,
+                         .data$EU,
+                         .data$Grp,
+                         .data$MS)
    tbG10<- dplyr::bind_rows(myTB20,tbG01)
    remapping <-  c(16,13,11,15,18,20,3,1,10,5,6,7,14,23,4,9,27,17,33,32)
    tbG11 <- dplyr::mutate(tbG10, GrpL = remapping[c(1:10,1:10,11:20,11:20)])
    
-   outG1 <- ggplot(tbG11,
-           ggplot2::aes(x=Time, y=EU))+  
+   outG1 <- ggplot2::ggplot(tbG11,
+           ggplot2::aes(x=.data$Time, y=.data$EU))+  
      ggplot2::geom_line()+
      ggplot2::geom_point() +
      #ggplot2::facet_wrap(vars(Grp),ncol = 7)+
-     ggplot2::facet_wrap(vars(GrpL),ncol = 7)+
+     ggplot2::facet_wrap(ggplot2::vars(.data$GrpL),ncol = 7)+
      ggplot2::geom_line(
-       ggplot2::aes(x=Time,y=MS),color="red",linetype = "dashed")+
+       ggplot2::aes(x=.data$Time,
+                    y=.data$MS),color="red",linetype = "dashed")+
      ggplot2::geom_point(
-       ggplot2::aes(x=Time,y=MS),color="red") +
+       ggplot2::aes(x=.data$Time,
+                    y=.data$MS),color="red") +
      ggplot2::theme(axis.text.x = ggplot2::element_text(
         #face = "bold", color = "#993333",size = 12, 
         angle = 90))+
@@ -113,14 +124,20 @@ myTB33fin <- structure(list(Pat = c("EUT1", "EUT1", "EUT1", "EUT1", "EUT1",
  tbG22 <- dplyr::mutate(tbG2, GrpL = remapping2[c(1:8,1:8,9:16,9:16,17:19,17:19)])
  
  outG2<- ggplot2::ggplot(tbG22,
-   ggplot2::aes(x=Time, y=EU))+  
+   ggplot2::aes(x=.data$Time, 
+                y=.data$EU))+  
    ggplot2::geom_line()+
    ggplot2::geom_point() +
-   ggplot2::facet_wrap(vars(GrpL),ncol = 7)+
+   ggplot2::facet_wrap(ggplot2::vars(.data$GrpL),ncol = 7)+
    #ggplot2::facet_wrap(vars(Grp),ncol = 7)+
-   ggplot2::geom_line(ggplot2::aes(x=Time,y=MS),color="red",linetype = "dashed")+
-   ggplot2::geom_point(ggplot2::aes(x=Time,y=MS),color="red")+
-   ggplot2::theme(axis.text.x = element_text(
+   ggplot2::geom_line(ggplot2::aes(x=.data$Time,
+                                   y=.data$MS),
+                      color="red",
+                      linetype = "dashed")+
+   ggplot2::geom_point(ggplot2::aes(x=.data$Time,
+                                    y=.data$MS),
+                       color="red")+
+   ggplot2::theme(axis.text.x = ggplot2::element_text(
      #face = "bold", color = "#993333",size = 12, 
      angle = 90))+
    ggplot2::scale_y_continuous(

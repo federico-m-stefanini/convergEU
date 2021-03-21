@@ -11,8 +11,6 @@
 #'               and last rows of the dataset,
 #'               which must be  time sorted.
 #' @param  timeName  a string with name of the time variable
-#' @param  typeIn  the type of indicator considered 'highBest' (default)
-#'                 or 'lowBest'
 #' @return  the type of pattern
 #'
 #'
@@ -24,7 +22,6 @@
 #' 
 ms_pattern_39 <- function( myTB,
                            timeName="time"
-                           #,typeIn=c('highBest','lowBest')[1]
                            ){
   #
   out_obj <- convergEU_glb()$tmpl_out
@@ -57,7 +54,7 @@ ms_pattern_39 <- function( myTB,
       delta_E <- mEU[2] -mEU[1]
       timeW <-  myTB[[timeName]][(auxY-1):auxY]
       #
-      temp_num_pat[puntaCountry,auxY] <-  map_2_patt_39(mMS,mEU,TimeW,remap=TRUE)
+      temp_num_pat[puntaCountry,auxY] <-  map_2_patt_39(mMS,mEU,timeW,remap=TRUE)
       temp_str_pat[puntaCountry,auxY] <-  as.character(temp_num_pat[puntaCountry,auxY])
       temp_str_pat_num[puntaCountry,auxY] <- temp_num_pat[puntaCountry,auxY]
       }

@@ -26,7 +26,7 @@ testest <- function(){
     x_angle =  45,
     data_res_download =  FALSE,
     auth = 'A.Student',
-    dataNow =  '2019/01/31',
+    dataNow =  '2021/03/20',
     outFile = "test_indica-fi-emp_20_64_MS",
     outDir = tempdir(),
     workTB = emp_20_64_MS
@@ -269,6 +269,56 @@ browseURL(file.path(tempdir(),'newtest_IT-emp_20_64_MS.html'))
    browseURL(file.path(tempdir(),'indica_custom.html'))
 
 
+   
+   # EIGE test
+   myTBtmp <-  extract_indicator_EIGE("WORK",2000,2020)$res
+   tmp <- go_indica_fi(
+     workDF = 'myTBtmp',#NA,#'emp_20_64_MS' ,
+     time_0 = 2010,
+     time_t = 2018,
+     timeName = 'time',
+     indicaT = 'WORK',
+     indiType = c('highBest','lowBest')[1],
+     seleMeasure = 'all',
+     seleAggre = 'custom',
+     x_angle =  45,
+     data_res_download =  FALSE,
+     auth = 'A.Student',
+     dataNow =  '2021/03/20',
+     outFile = "test_indica-eige",
+     outDir = tempdir(),
+     #workTB = myTBtmp,
+     eige_layout=TRUE
+   )
+   
+   # browseURL( file.path(tempdir(),'test_indica-eige.html'))
+   myTBtmp <-  extract_indicator_EIGE("WORK",2000,2020)$res
+   tmp <- go_indica_fi(
+     workDF = NA,#'emp_20_64_MS' ,
+     time_0 = 2010,
+     time_t = 2018,
+     timeName = 'time',
+     indicaT = 'WORK',
+     indiType = c('highBest','lowBest')[1],
+     seleMeasure = 'all',
+     seleAggre = 'custom',
+     x_angle =  45,
+     data_res_download =  FALSE,
+     auth = 'A.Student',
+     dataNow =  '2021/03/20',
+     outFile = "test_indica-eige",
+     outDir = tempdir(),
+     workTB = myTBtmp,
+     eige_layout=TRUE
+   )
+   
+   
+   
+   
+   
+   
+   
+   
 
   # strict converg lowBest
   myTTB <-   tibble::tribble(

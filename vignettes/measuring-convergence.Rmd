@@ -1427,10 +1427,10 @@ at each year.
 Nevertheless one key country is specified and some other countries of 
 interest may be listed to better decorate graphs and compare performances.
 
-Below, a call to the  function *go_ms_fish()* illustrates the syntax:  
+Below, a call to the  function *go_ms_fi()* illustrates the syntax:  
 
 ```r
-go_ms_fish(
+go_ms_fi(
     workDF ='myTB',
     countryRef ='DE',
     otherCountries = "c('IT','UK','FR')",
@@ -1453,7 +1453,7 @@ and unusual ways to pass parameters to such a function.
 In fact, note that the first argument is the working dataset
 which is passed not as an R object but as a string, the name
 of the dataset that must be available in the R workspace
-before invoking *go_ms_fish*.    
+before invoking *go_ms_fi*.    
 The second argument *countryRef* is a string with the short name of
 a member country that will be shown in one-country plots.
 Less obvious, argument *indiType = "lowBest"* specifies if
@@ -1486,7 +1486,7 @@ subsequent use in other technical reports.
 # Indicator fiches
 
 
-An auxiliary function *go_indica_fish()*
+An auxiliary function *go_indica_fi()*
 is provided in the  R package  *convergEU*
 to produce an indicator fiches, where the output is an html file.
 At this purpose, an output directory must be also specified.
@@ -1497,7 +1497,7 @@ as described in the last section above.
 An example of syntax to invoke the procedure is:  
 
 ```
-go_indica_fish(
+go_indica_fi(
     time_0 = 2005,
     time_t = 2010,
     timeName = 'time',

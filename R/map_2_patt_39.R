@@ -3,6 +3,8 @@
 #'
 #'  Gradients values and Delta2 are mapped to one pattern (string and number).
 #'  See Eurofound 2018 report.
+#'  
+#'  
 #'  In the mapping table within this function
 #'  +1 means greater than zero, 0 means equal to zero,
 #'  -1 means smaller than 0.
@@ -17,7 +19,6 @@
 #'
 #' @param vaMS  member state values  sorted in ascending order by time.
 #' @param vaEU  EU values sorted in ascending order by time.
-#' @param delta_E difference of EU means at tiems t+1 and t.
 #' @param vaT  sorted pair of times.
 #' @param remap  is FALSE for the original numerical labelling of patterns
 #'              otherwise TRUE to map to old numerical correspondence.  

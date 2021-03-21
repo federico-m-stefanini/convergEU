@@ -34,6 +34,9 @@
 #' @param pdf_out should the output be saved as PDF file? The default is  FALSE.
 #' @param workTB   a tibble containing data.
 #' @param selfContained  TRUE if just one file is desired
+#' @param eige_layout TRUE if the EIGE layout is desired
+#'
+#'
 #'
 #' @references{\url{https://local.disia.unifi.it/stefanini/RESEARCH/coneu/tutorial-conv.html}}
 #'
@@ -59,7 +62,8 @@ go_indica_fi <-  function(
   outDir = NA,
   pdf_out = FALSE,
   workTB = NULL,
-  selfContained = FALSE
+  selfContained = FALSE,
+  eige_layout = FALSE
 ){
   if(is.na(workDF) & (!is.null(workTB))){
     curTB <-  workTB
@@ -78,8 +82,13 @@ go_indica_fi <-  function(
   }
   #
   sourceFilecss <- system.file("extdata", "EUF.css", package = "convergEU")
-  sourceFile1 <- system.file("extdata", "indica_fi_2.Rmd", package = "convergEU")
+  if(eige_layout){
+     sourceFile1 <- system.file("extdata", "indica_fi_2_eige.Rmd", package = "convergEU")
+  }else{
+     sourceFile1 <- system.file("extdata", "indica_fi_2.Rmd", package = "convergEU")
+  }
   sourceFile2 <- system.file("extdata", "eurofound.jpg", package = "convergEU")
+  sourceFile2eige <- system.file("extdata", "eige_logo-share.jpg", package = "convergEU")
   # conditional files
   sourceFile71 <- system.file("extdata", "indica_fi_2_sigma.Rmd", package = "convergEU")
   sourceFile72 <- system.file("extdata", "indica_fi_2_beta.Rmd", package = "convergEU")
@@ -106,6 +115,8 @@ go_indica_fi <-  function(
   outFcss <- file.path(outDir,"EUF.css")
   sourcePF1 <- file.path(outDir,"indica_fi_2.Rmd")
   sourcePF2 <- file.path(outDir,"eurofound.jpg")
+  sourcePF2eige   <- file.path(outDir,"eige_logo-share.jpg")
+  #
   sourcePF71 <- file.path(outDir,"indica_fi_2_sigma.Rmd")
   sourcePF72 <- file.path(outDir,"indica_fi_2_beta.Rmd")
   sourcePF73 <- file.path(outDir,"indica_fi_2_nobeta.Rmd")
@@ -118,6 +129,11 @@ go_indica_fi <-  function(
               copy.mode = TRUE, copy.date = FALSE);
     file.copy(from = sourceFile2,
               to = sourcePF2,
+              overwrite = TRUE,
+              recursive = FALSE,
+              copy.mode = TRUE, copy.date = FALSE);
+    file.copy(from = sourceFile2eige,
+              to = sourcePF2eige,
               overwrite = TRUE,
               recursive = FALSE,
               copy.mode = TRUE, copy.date = FALSE);
