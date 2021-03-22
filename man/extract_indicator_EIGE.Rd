@@ -8,7 +8,8 @@ extract_indicator_EIGE(
   indicator_code,
   fromTime,
   toTime,
-  countries = convergEU_glb()$EU27$memberStates$codeMS
+  countries = convergEU_glb()$EU27$memberStates$codeMS,
+  type_flag = FALSE
 )
 }
 \arguments{
@@ -24,6 +25,9 @@ extract_indicator_EIGE(
 
 \item{countries}{a collection of strings representing countries
 in the standard two letters format}
+
+\item{type_flag}{if FALSE data are returned, otherwise the type of indicator
+is returned; if METADATA is selected, NA is returned}
 }
 \value{
 a dataset (tibble) years by countries
