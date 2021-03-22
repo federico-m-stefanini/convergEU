@@ -16,6 +16,31 @@ test_that("Simple  extraction of METADATA", {
 })
 
 
+test_that("Simple  extraction of types", {
+  myTB <- extract_indicator_EIGE (
+    indicator_code = "METADATA", #Code_in_database
+    fromTime=2003,
+    toTime=2015,
+    type_flag=TRUE)
+  # myTB
+  expect_equal(sum(is.na(myTB$res)),2 )
+  expect_equal(length(myTB$res),2 )
+})
+
+
+test_that("Simple  extraction of types", {
+  myTB <- extract_indicator_EIGE (
+    indicator_code = "MINISTER", #Code_in_database
+    fromTime=2003,
+    toTime=2015,
+    type_flag=TRUE)
+  # myTB
+  expect_equal(myTB$res[1], "highBest")
+  expect_equal(myTB$res[2],  "maximise")
+})
+
+
+
 
 test_that("Simple  extraction  indicator  WORK", {
   myTB <- extract_indicator_EIGE (

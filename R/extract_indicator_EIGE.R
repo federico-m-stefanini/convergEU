@@ -6,6 +6,7 @@
 #' If the indicator_code is equal to "METADATA" then information on
 #' available indicators is provided as a dataframe (tibble):
 #' names of indicators are contained in the variable "Worksheet name".
+#' 
 #'
 #' @param indicator_code one of the following strings:"INDEX",  "WORK",
 #'                       "MONEY", "KNOWLEDGE",  "TIME", "POWER",
@@ -16,6 +17,8 @@
 #' @param toTime last year to be considered
 #' @param countries a collection of strings representing countries
 #'                   in the standard two letters format
+#' @param type_flag if FALSE data are returned, otherwise the type of indicator
+#'                  is returned; if METADATA is selected, NA is returned                   
 #' @return  a dataset (tibble) years by countries
 #'
 #'
@@ -43,13 +46,23 @@ extract_indicator_EIGE <- function(
                       indicator_code, #Code_in_database
                       fromTime,
                       toTime,
-                      countries =  convergEU_glb()$EU27$memberStates$codeMS){
+                      countries =  convergEU_glb()$EU27$memberStates$codeMS,
+                      type_flag = FALSE){
   #
   # available indicators on March 2021
   indi_all_EIGE <- c("INDEX",  "WORK",  "MONEY", "KNOWLEDGE",  "TIME", "POWER",
                      "HEALTH",  "FTE", "DWL", "SEGRE", "INCOME", "TERTIARY", "CARE", 
                      "HOUSE",  "MINISTER", "PARLIAMENT", "BOARD", "HLY",
                      "METADATA")
+  indi_type_EIGE <- c("highBest", "highBest", "highBest", "highBest", "highBest", 
+                      "highBest", "highBest", "lowBest", "lowBest", "lowBest", "lowBest", 
+                      "lowBest", "lowBest", "lowBest", "highBest", "highBest", "highBest", 
+                      "lowBest",NA)
+  indi_minmax_EIGE<- c("maximise", "maximise", "maximise", "maximise", "maximise",
+                       "maximise", "maximise", "minimise", "minimise", 
+                        "minimise", "minimise", "minimise", "minimise", 
+                       "minimise", "maximise", "maximise", "maximise", "minimise",NA)
+  #
   out_obj <- convergEU_glb()$tmpl_out
   myTB <- NULL
   # data available?
@@ -57,6 +70,14 @@ extract_indicator_EIGE <- function(
     out_obj$err <- "Error: data not available."
     return(out_obj)
   }
+  # type of indicator
+  if(type_flag){
+     punta <- which(indicator_code == indi_all_EIGE)
+     out_obj$res <- c(indi_type_EIGE[punta],
+              indi_minmax_EIGE[punta])
+    return(out_obj)
+  }
+  #
   tmpenv <- new.env()
   sourceFile1 <- system.file("EIGE", "EIGEdata.RData", package = "convergEU")
   tmpdataenv <- load(sourceFile1, envir=tmpenv)
