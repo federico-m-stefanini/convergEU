@@ -36,7 +36,7 @@ test_that("Simple  extraction of types", {
     type_flag=TRUE)
   # myTB
   expect_equal(myTB$res[1], "highBest")
-  expect_equal(myTB$res[2],  "maximise")
+  expect_equal(myTB$res[2],  "maximisation")
 })
 
 

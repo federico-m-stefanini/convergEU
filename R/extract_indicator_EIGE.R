@@ -58,10 +58,10 @@ extract_indicator_EIGE <- function(
                       "highBest", "highBest", "lowBest", "lowBest", "lowBest", "lowBest", 
                       "lowBest", "lowBest", "lowBest", "highBest", "highBest", "highBest", 
                       "lowBest",NA)
-  indi_minmax_EIGE<- c("maximise", "maximise", "maximise", "maximise", "maximise",
-                       "maximise", "maximise", "minimise", "minimise", 
-                        "minimise", "minimise", "minimise", "minimise", 
-                       "minimise", "maximise", "maximise", "maximise", "minimise",NA)
+  indi_minmax_EIGE<- c("maximisation", "maximisation", "maximisation", "maximisation", "maximisation",
+                       "maximisation", "maximisation", "minimisation", "minimisation", 
+                        "minimisation", "minimisation", "minimisation", "minimisation", 
+                       "minimisation", "maximisation", "maximisation", "maximisation", "minimisation",NA)
   #
   out_obj <- convergEU_glb()$tmpl_out
   myTB <- NULL
