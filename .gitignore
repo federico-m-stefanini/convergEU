@@ -28,7 +28,6 @@ vignettes/*.pdf
 .Renviron
 NEWS.md
 *.html
-man/*.Rd
 *.Rproj
 Meta/*
 .gitignore
