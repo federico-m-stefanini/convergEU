@@ -1,7 +1,7 @@
 Package: convergEU
 Type: Package
 Title: Monitoring Convergence of EU Countries
-Version: 0.6.2
+Version: 0.6.3
 Depends: R (>= 4.0.0)
 Authors@R: c(
            person("Federico M.", "Stefanini", 

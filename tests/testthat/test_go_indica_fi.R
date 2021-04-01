@@ -284,7 +284,7 @@ browseURL(file.path(tempdir(),'newtest_IT-emp_20_64_MS.html'))
      x_angle =  45,
      data_res_download =  FALSE,
      auth = 'A.Student',
-     dataNow =  '2021/03/20',
+     dataNow =  '2021/03/31',
      outFile = "test_indica-eige",
      outDir = tempdir(),
      #workTB = myTBtmp,
@@ -292,6 +292,7 @@ browseURL(file.path(tempdir(),'newtest_IT-emp_20_64_MS.html'))
    )
    
    # browseURL( file.path(tempdir(),'test_indica-eige.html'))
+   
    myTBtmp <-  extract_indicator_EIGE("WORK",2000,2020)$res
    tmp <- go_indica_fi(
      workDF = NA,#'emp_20_64_MS' ,

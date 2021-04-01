@@ -87,7 +87,8 @@ params$workTB <- iris
 <!-- center -->
 <img src="eurofound.jpg" width=248px height=163px>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-<img src="eige_logo-share.jpg" width=220px height=200px>
+<!-- img src="eige_logo-share.jpg" width=220px height=200px  -->
+<img src="eige_logo-share.jpg" width=306px height=292px>
 <br><br>
 
 <!--
@@ -378,6 +379,7 @@ mGallEU <- ggplot2::ggplot(wkDF3,aes(x = time, y= Indicator,
                    vjust = 1,
                    hjust=1)) +
          ggplot2::ylab(indicaT) 
+         #ggplot2::guide_legend(reverse=TRUE)
 
 out_packed_list$allEUms <-  list()
 out_packed_list$allEUms$mGallEU <- mGallEU
@@ -418,8 +420,11 @@ riaFlat<-  sintesiTB  %>% tidyr::gather_(
                 key_col = "Stat",
                 value_col="Value" )
 riaFlat$Stat <- factor(riaFlat$Stat,
+                       # levels= c("min", "mean_mSD", "mean", "median",
+                       #          "mean_pSD","max")
                        levels= c("min", "mean_mSD", "mean", "median",
-                                "mean_pSD","max"))
+                                "mean_pSD","max")
+                       )
 myStyle <-  c("solid", "dashed", "dotted", "dotdash", "longdash", "twodash")
 myColors <- c("black","black","white","red","blue","blue")
 riaFlat <- dplyr::mutate(riaFlat,LineType = 0)    
@@ -457,7 +462,8 @@ sintesiTB$eticheMax <- sapply(seq(1,length(sintesiTB$max)),
 mGallSummary <- ggplot2::ggplot(riaFlat,aes(x = time,y= Value)) +
   ggplot2::geom_line( aes( colour=Stat ),linetype=riaFlat$mylty) +
   ggplot2::geom_point( aes( colour=Stat)) +
-  scale_colour_manual("Statistic",values=c(min="blue",
+  scale_colour_manual("Statistic",
+                      values=c(min="blue",
                                mean_mSD="red",
                                mean="black",
                                median="black",
@@ -471,7 +477,8 @@ mGallSummary <- ggplot2::ggplot(riaFlat,aes(x = time,y= Value)) +
                                max="max")
                       ) +
   guides(shape = FALSE, colour = guide_legend(
-           override.aes = list(linetype =  c("min"="82",
+           override.aes = list(
+                           linetype =  c("min"="82",
                                         "mean_mSD"="3313",
                                         "mean"="F1",
                                         "median"="66",
