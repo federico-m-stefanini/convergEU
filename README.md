@@ -12,7 +12,7 @@ This is the development release.
 
 Some references  are:   
 
-  *  [tutorial-conv.html](https://local.disia.unifi.it/stefanini/RESEARCH/coneu/tutorial-conv.html)   
+  *  [tutorial-conv.html](https://unimi2013-my.sharepoint.com/:u:/g/personal/federico_stefanini_unimi_it/EW0cVSIgbtZAvLPNbqcxdX8Bfn5VGSRHfAH88hQwc_RIEQ?e=MgtSZu)   
   *  [Eurofound working paper](https://www.eurofound.europa.eu/sites/default/files/wpef20008.pdf) 
   *  [Eurofound research report](https://www.eurofound.europa.eu/sites/default/files/ef_publication/field_ef_document/ef18003en.pdf)       
   *  To prepare fiches without any R code, please visit the Eurofound official   site of the [**convergEU app**](https://www.eurofound.europa.eu/data/convergence-hub/convergeu-app)  
