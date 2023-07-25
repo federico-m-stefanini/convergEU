@@ -15,9 +15,11 @@ Some references  are:
   *  [tutorial-conv.html](https://unimi2013-my.sharepoint.com/:u:/g/personal/federico_stefanini_unimi_it/EW0cVSIgbtZAvLPNbqcxdX8Bfn5VGSRHfAH88hQwc_RIEQ?e=MgtSZu)   
   *  [Eurofound working paper](https://www.eurofound.europa.eu/sites/default/files/wpef20008.pdf) 
   *  [Eurofound research report](https://www.eurofound.europa.eu/sites/default/files/ef_publication/field_ef_document/ef18003en.pdf)       
-  *  To prepare fiches without any R code, please visit the Eurofound official   site of the [**convergEU app**](https://www.eurofound.europa.eu/data/convergence-hub/convergeu-app)  
+  *  To prepare fiches without any R code, please visit the Eurofound official   site of the [**convergEU app**](https://www.eurofound.europa.eu/data/convergence-hub/convergeu-app)    
 
-The stable release of the R package is available at https://CRAN.R-project.org/package=convergEU
+See the article published on the Austrian Journal of Statistics https://www.ajs.or.at/index.php/ajs/article/view/1468     
+
+The stable release of the R package is available at https://CRAN.R-project.org/package=convergEU  
 
 This project is a joint work with  **Eurofound** developed under **contract &#8470;
  18-3030-42**.<br>
